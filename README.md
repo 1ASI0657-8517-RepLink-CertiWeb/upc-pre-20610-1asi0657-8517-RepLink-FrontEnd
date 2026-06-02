@@ -332,9 +332,8 @@ CertiWeb-Front/
 
 ## Enlaces
 
-- **App**: <https://certi-web-front.vercel.app>
-- **Backend**: <https://certiweb-backend.onrender.com/api/v1>
-- **Repo**: <https://github.com/Diseno-Experimentos/CertiWeb-Front>
+- **App**: <https://replink-plum.vercel.app/certiweb-frontend/login>
+- **Backend**: <https://replink-backend-ra58.onrender.com/swagger/index.html>
 
 ---
 
