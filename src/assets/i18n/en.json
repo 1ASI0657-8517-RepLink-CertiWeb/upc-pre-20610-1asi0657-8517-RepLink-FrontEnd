@@ -237,7 +237,11 @@
     "notFound": "Car details not found.",
     "emailSubject": "Interest in car: {model} {brand}",
     "emailBody": "Dear Seller,\n\nI am interested in your car {brand} {model} with license plate {licensePlate}.\n\nI would like to get more information about this vehicle.\n\nBest regards,",
-    "noEmailWarning": "Could not contact seller. No email available."
+    "noEmailWarning": "Could not contact seller. No email available.",
+    "shareLink": "Share Link",
+    "linkCopied": "Link copied to clipboard!",
+    "copyFailed": "Could not copy link. Copy it manually:",
+    "shareTitle": "Share this vehicle"
   },
   "carList": {
     "title": "Certified Cars",

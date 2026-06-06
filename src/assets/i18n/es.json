@@ -229,7 +229,11 @@
     "notFound": "Detalles del vehículo no encontrados.",
     "emailSubject": "Interés en coche: {model} {brand}",
     "emailBody": "Estimado vendedor,\n\nEstoy interesado en su coche {brand} {model} con matrícula {licensePlate}.\n\nMe gustaría obtener más información sobre este vehículo.\n\nSaludos cordiales,",
-    "noEmailWarning": "No se pudo contactar al vendedor. No hay correo electrónico disponible."
+    "noEmailWarning": "No se pudo contactar al vendedor. No hay correo electrónico disponible.",
+    "shareLink": "Compartir enlace",
+    "linkCopied": "¡Enlace copiado al portapapeles!",
+    "copyFailed": "No se pudo copiar el enlace. Cópialo manualmente:",
+    "shareTitle": "Compartir este vehículo"
   },
   "carList": {
     "title": "Vehículos Certificados",

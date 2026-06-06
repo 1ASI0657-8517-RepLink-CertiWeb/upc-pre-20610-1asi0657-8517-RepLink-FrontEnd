@@ -97,7 +97,7 @@ router.beforeEach((to, from, next) => {
   const isAdmin = sessionData ? sessionData.isAdmin : false;
 
   const publicPages = ['/register', '/login'];
-  const isPublicPage = publicPages.includes(to.path);
+  const isPublicPage = publicPages.includes(to.path) || to.path.startsWith('/car-detail');
   const adminRoute = '/admin-certification';
 
   if (!hasSession) { 
