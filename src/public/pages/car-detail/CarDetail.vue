@@ -133,6 +133,25 @@ const contactSeller = () => {
   }
 };
 
+  const shareUrl = computed(() => {
+    const base = import.meta.env.VITE_APP_BASE_URL || window.location.origin;
+    return `${base}/certiweb-frontend/car-detail/${carId.value}`;
+  });
+
+  const copyLinkFeedback = ref('');
+  const showCopyFeedback = ref(false);
+
+  const copyShareLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl.value);
+      copyLinkFeedback.value = t('carDetail.linkCopied');
+    } catch {
+      copyLinkFeedback.value = `${t('carDetail.copyFailed')} ${shareUrl.value}`;
+    }
+    showCopyFeedback.value = true;
+    setTimeout(() => { showCopyFeedback.value = false; }, 3000);
+  };
+
 onMounted(async () => {
   console.log('=== DEBUGGING ROUTE ===');
   console.log('Current route:', route);
@@ -256,7 +275,33 @@ onMounted(async () => {
         </div>
 
         <div class="actions-footer">
-          <pv-button 
+          <div class="share-section">
+            <h3 class="section-title">
+              <i class="pi pi-share-alt"></i> {{ t('carDetail.shareTitle') }}
+            </h3>
+            <div class="share-actions">
+              <pv-input-text
+                :value="shareUrl"
+                readonly
+                class="share-url-input"
+              />
+              <pv-button
+                :label="t('carDetail.shareLink')"
+                icon="pi pi-copy"
+                class="p-button-outlined p-button-info"
+                @click="copyShareLink"
+              />
+            </div>
+            <pv-message
+              v-if="showCopyFeedback"
+              severity="success"
+              :closable="false"
+              class="copy-feedback"
+            >
+              {{ copyLinkFeedback }}
+            </pv-message>
+          </div>
+          <pv-button
             :label="t('carDetail.contactSeller')" 
             icon="pi pi-envelope" 
             class="p-button-raised p-button-primary" 
@@ -774,9 +819,33 @@ onMounted(async () => {
   .pdf-preview-container::after {
     display: none;
   }
-  
+
   .pdf-iframe {
     display: block !important;
   }
+}
+
+.share-section {
+  margin-bottom: 1.5rem;
+}
+
+.share-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.share-url-input {
+  flex: 1;
+  min-width: 200px;
+  font-size: 0.85rem;
+  color: #555;
+  background: #f8f8f8;
+}
+
+.copy-feedback {
+  margin-top: 0.5rem;
 }
 </style>
