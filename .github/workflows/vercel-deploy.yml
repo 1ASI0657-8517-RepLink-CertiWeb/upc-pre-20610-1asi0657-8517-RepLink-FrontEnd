@@ -7,7 +7,7 @@ on:
     branches: [main, develop]
 
 env:
-  VITE_SERVER_BASE_PATH: https://certiweb-backend.onrender.com/api/v1
+  VITE_SERVER_BASE_PATH: https://replink-backend-ra58.onrender.com/api/v1
 
 jobs:
   # Job 1: Code Quality Checks
