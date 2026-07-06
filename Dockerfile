@@ -5,7 +5,7 @@ RUN npm ci --force
 COPY . ./
 
 # Build args to allow setting API base path at build-time
-ARG VITE_SERVER_BASE_PATH=https://certiweb-backend.onrender.com/api/v1
+ARG VITE_SERVER_BASE_PATH=https://upc-pre-20610-1asi0657-8517-replink.onrender.com/api/v1
 ENV VITE_SERVER_BASE_PATH=${VITE_SERVER_BASE_PATH}
 
 RUN npm run build

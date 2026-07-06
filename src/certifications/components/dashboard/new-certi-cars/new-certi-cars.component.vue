@@ -2,60 +2,32 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { carService } from '../../../services/car.service';
 
 const { t } = useI18n();
 const router = useRouter();
 
-const certifiedCars = ref([
-  {
-    id: 1,
-    name: 'BMW Serie 4',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYVcLx4pGvnOpKwlHUU49s8jkRkJDGVxaiDw&s',
-    color: t('carColors.metallicBlue'),
-    price: 'S/4,399.00',
-    route: '/car-detail/4'
-  },
-  {
-    id: 2,
-    name: 'Ford Mustang GT',
-    image: 'https://www.vdm.ford.com/content/dam/na/ford/en_us/images/mustang/2025/jellybeans/Ford_Mustang_2025_200A_PJS_883_89W_13B_COU_64F_99H_44U_EBST_YZTAC_DEFAULT_EXT_4.png',
-    color: t('carColors.gray'),
-    price: 'S/4,599.00',
-    route: '/car-detail/5'
-  },
-  {
-    id: 3,
-    name: 'Kia Niro',
-    image: 'https://cdn.motor1.com/images/mgl/ojyBzq/s3/kia-niro-2025.jpg',
-    color: t('carColors.red'),
-    price: 'S/3,900.00',
-    route: '/car-detail/2'
-  },
-  {
-    id: 4,
-    name: 'Kia Sportage',
-    image: 'https://s3.amazonaws.com/kia-greccomotors/Sportage_blanca_01_9a1ad740c7.png',
-    color: t('carColors.pearlWhite'),
-    price: 'S/3,299.00',
-    route: '/car-detail/3'
-  },
-  {
-    id: 5,
-    name: 'Audi A5 Sportback',
-    image: 'https://hips.hearstapps.com/hmg-prod/images/2025-audi-a5-137-669583e0eda6e.jpg?crop=0.638xw:0.479xh;0.207xw,0.312xh&resize=1200:*',
-    color: t('carColors.quantumGray'),
-    price: 'S/4,799.00',
-    route: '/car-detail/6'
-  },
-  {
-    id: 6,
-    name: 'Mercedes Clase C',
-    image: 'https://images.coches.com/_vn_/mercedes/Clase-C/0b325a581bbefb9994d94efc91277ba9.jpg?w=1920&ar=16:9',
-    color: t('carColors.iridiumSilver'),
-    price: 'S/4,670.00',
-    route: '/car-detail/7'
+const certifiedCars = ref([]);
+const loading = ref(true);
+
+const fetchCertifiedCars = async () => {
+  try {
+    loading.value = true;
+    const cars = await carService.getAllCars();
+    certifiedCars.value = (Array.isArray(cars) ? cars : []).slice(0, 6).map((car) => ({
+      id: car.id,
+      name: `${car.brand} ${car.model}`,
+      image: car.imageUrl,
+      price: car.price,
+      route: `/car-detail/${car.id}`
+    }));
+  } catch (err) {
+    console.error('Error fetching certified cars:', err);
+    certifiedCars.value = [];
+  } finally {
+    loading.value = false;
   }
-]);
+};
 
 const currentIndex = ref(0);
 const visibleItems = ref(4);
@@ -119,12 +91,22 @@ const handleMouseLeave = () => {
   startAutoplay();
 };
 
-onMounted(() => {
+const formatCurrency = (value) => {
+  const numValue = typeof value === 'string' ? parseFloat(value) : value;
+  if (typeof numValue !== 'number' || isNaN(numValue)) {
+    return value;
+  }
+  return new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' }).format(numValue);
+};
+
+onMounted(async () => {
   adjustVisibleItems();
   window.addEventListener('resize', adjustVisibleItems);
-  startAutoplay();
-  
-  
+  await fetchCertifiedCars();
+  if (certifiedCars.value.length > 0) {
+    startAutoplay();
+  }
+
   return () => {
     window.removeEventListener('resize', adjustVisibleItems);
     stopAutoplay();
@@ -140,27 +122,36 @@ onMounted(() => {
         <p class="welcome-subtitle">{{ t('welcome.subtitle') }}</p>
       </div>
       
-      <div 
-        class="carousel-container" 
-        @mouseenter="handleMouseEnter" 
+      <div v-if="loading" class="certified-cars-loading">
+        <pv-progress-spinner />
+      </div>
+
+      <div v-else-if="certifiedCars.length === 0" class="certified-cars-empty">
+        <p>{{ t('welcome.noCars') }}</p>
+      </div>
+
+      <div
+        v-else
+        class="carousel-container"
+        @mouseenter="handleMouseEnter"
         @mouseleave="handleMouseLeave"
       >
-        <pv-button 
-          class="carousel-arrow carousel-arrow-prev" 
+        <pv-button
+          class="carousel-arrow carousel-arrow-prev"
           @click="prevSlide"
           :class="{ 'disabled': currentIndex === 0 }"
         >
           <i class="pi pi-chevron-left"></i>
         </pv-button>
-        
+
         <div class="carousel-wrapper">
-          <div 
-            class="carousel-track" 
+          <div
+            class="carousel-track"
             :style="{ transform: `translateX(-${currentIndex * (100 / visibleItems)}%)` }"
           >
-            <div 
-              v-for="car in certifiedCars" 
-              :key="car.id" 
+            <div
+              v-for="car in certifiedCars"
+              :key="car.id"
               class="carousel-item"
               :style="{ width: `calc(${100 / visibleItems}% - 1rem)` }"
               @click="navigateToCar(car.route)"
@@ -169,7 +160,7 @@ onMounted(() => {
                 <div class="car-image-container">
                   <img :src="car.image" :alt="car.name" class="car-image" />
                   <div class="car-overlay">
-                    <span class="car-price">{{ car.price }}</span>
+                    <span class="car-price">{{ formatCurrency(car.price) }}</span>
                     <span class="car-view-details">
                       <i class="pi pi-search"></i> {{ t('car.viewDetails') }}
                     </span>
@@ -177,22 +168,21 @@ onMounted(() => {
                 </div>
                 <div class="car-info">
                   <h3 class="car-name">{{ car.name }}</h3>
-                  <p class="car-color">{{ car.color }}</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        
-        <pv-button 
-          class="carousel-arrow carousel-arrow-next" 
+
+        <pv-button
+          class="carousel-arrow carousel-arrow-next"
           @click="nextSlide"
           :class="{ 'disabled': currentIndex >= certifiedCars.length - visibleItems }"
         >
           <i class="pi pi-chevron-right"></i>
         </pv-button>
       </div>
-      
+
       <div class="see-more-container">
         <router-link to="/cars" class="see-more-link">
           {{ t('navigation2.seeMoreModels') }}
@@ -241,6 +231,16 @@ onMounted(() => {
   align-items: center;
   margin: 0 -0.5rem;
   padding: 1rem 0;
+}
+
+.certified-cars-loading,
+.certified-cars-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  color: #495057;
+  font-size: 1rem;
 }
 
 .carousel-wrapper {

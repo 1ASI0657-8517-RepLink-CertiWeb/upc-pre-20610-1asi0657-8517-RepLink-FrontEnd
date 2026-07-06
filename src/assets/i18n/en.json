@@ -164,7 +164,8 @@
   },
   "welcome": {
     "title": "Welcome back!",
-    "subtitle": "Check out these recently certified cars"
+    "subtitle": "Check out these recently certified cars",
+    "noCars": "No certified vehicles yet"
   },
   "car": {
     "viewDetails": "View details"

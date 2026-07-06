@@ -6,5 +6,5 @@ export const environment = {
     (typeof import.meta !== "undefined" &&
       import.meta.env &&
       import.meta.env.VITE_SERVER_BASE_PATH) ||
-    "https://replink-backend-ra58.onrender.com/api/v1",
+    "https://upc-pre-20610-1asi0657-8517-replink.onrender.com/api/v1",
 };

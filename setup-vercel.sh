@@ -66,7 +66,7 @@ echo ""
 echo "6️⃣  Configurar variables de entorno en Vercel"
 echo "   Ve a: Vercel Dashboard → Settings → Environment Variables"
 echo "   Agrega:"
-echo "   - VITE_SERVER_BASE_PATH: https://certiweb-backend.onrender.com/api/v1"
+echo "   - VITE_SERVER_BASE_PATH: https://upc-pre-20610-1asi0657-8517-replink.onrender.com/api/v1"
 echo ""
 
 # Step 7

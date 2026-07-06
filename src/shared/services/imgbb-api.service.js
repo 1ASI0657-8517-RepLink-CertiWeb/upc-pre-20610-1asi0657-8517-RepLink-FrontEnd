@@ -1,4 +1,4 @@
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment.js';
 import axios from "axios";
 
 export class ImgbbApiService {

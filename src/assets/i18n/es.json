@@ -156,7 +156,8 @@
   },
   "welcome": {
     "title": "¡Bienvenido de nuevo!",
-    "subtitle": "Revisa estos autos que fueron recientemente certificados"
+    "subtitle": "Revisa estos autos que fueron recientemente certificados",
+    "noCars": "Aún no hay vehículos certificados"
   },
   "car": {
     "viewDetails": "Ver detalles"
