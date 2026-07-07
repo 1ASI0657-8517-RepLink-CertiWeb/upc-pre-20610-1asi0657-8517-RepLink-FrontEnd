@@ -9,35 +9,47 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 const acceptedReservationData = ref(null);
-const adFormData = ref({});
+const adFormState = ref({ data: {}, isValid: false });
+const pdfState = ref(null);
 const createdCarId = ref(null);
 const isSavingCar = ref(false);
-const isUploadingPdfStatus = ref(false);
 
 const router = useRouter();
+
+const isStep2Complete = computed(() => adFormState.value.isValid);
+const isStep3Complete = computed(() => !!pdfState.value?.pdfCertification);
+const isReadyToFinalize = computed(() =>
+  !!acceptedReservationData.value && isStep2Complete.value && isStep3Complete.value && !createdCarId.value
+);
 
 const handleReservationAccepted = (reservationData) => {
   acceptedReservationData.value = reservationData;
   createdCarId.value = null;
 };
 
-const handleAdFormUpdate = (data) => {
-  adFormData.value = data;
+const handleAdFormUpdate = (payload) => {
+  adFormState.value = payload;
 };
 
-const handleSaveCarData = async (formData) => {
-  if (!acceptedReservationData.value) {
-    alert(t('adminCertification.alertReservationNeeded'));
+const handlePdfDataUpdate = (payload) => {
+  pdfState.value = payload;
+};
+
+const handleFinalizeCar = async () => {
+  if (!acceptedReservationData.value || !isStep2Complete.value || !isStep3Complete.value) {
+    alert(t('adminCertification.alertFinalizeIncomplete'));
     return;
   }
-   
+
   isSavingCar.value = true;
-   
+
   try {
+    const formData = adFormState.value.data;
+
     if (!acceptedReservationData.value.brand || !acceptedReservationData.value.model) {
       throw new Error('Marca y modelo son requeridos');
     }
- 
+
     const brandMapping = {
       'toyota': 1,
       'nissan': 2,
@@ -54,10 +66,10 @@ const handleSaveCarData = async (formData) => {
       'audi': 12,
       'bmw': 13
     };
-  
+
     const brandName = acceptedReservationData.value.brand.toLowerCase().trim();
     const correctBrandId = brandMapping[brandName];
-     
+
     if (!correctBrandId) {
       throw new Error(`Marca no reconocida: ${acceptedReservationData.value.brand}`);
     }
@@ -77,16 +89,7 @@ const handleSaveCarData = async (formData) => {
     if (price < 0) {
       throw new Error('El precio no puede ser negativo');
     }
-    
-    let pdfCertification = null;
-    if (formData.pdfCertification && typeof formData.pdfCertification === 'string') {
-      
-      pdfCertification = formData.pdfCertification;
-      console.log('PDF con prefijo para crear auto:', pdfCertification.substring(0, 50));
-    } else {
-      pdfCertification = '';
-    }
-  
+
     const carDataPayload = {
       title: formData.title || `${acceptedReservationData.value.brand} ${acceptedReservationData.value.model}`,
       owner: acceptedReservationData.value.reservationName,
@@ -95,32 +98,29 @@ const handleSaveCarData = async (formData) => {
       brandId: correctBrandId,
       model: acceptedReservationData.value.model,
       description: formData.description || '',
-      pdfCertification: pdfCertification,
+      pdfCertification: pdfState.value.pdfCertification,
       imageUrl: acceptedReservationData.value.imageUrl || 'https://via.placeholder.com/300x200.png?text=Car+Image',
       price: price,
       licensePlate: licensePlate,
       originalReservationId: parseInt(acceptedReservationData.value.id)
     };
- 
-    const requiredFields = ['title', 'owner', 'ownerEmail', 'year', 'brandId', 'model', 'licensePlate', 'originalReservationId'];
+
+    const requiredFields = ['title', 'owner', 'ownerEmail', 'year', 'brandId', 'model', 'licensePlate', 'originalReservationId', 'pdfCertification'];
     for (const field of requiredFields) {
       if (!carDataPayload[field] && carDataPayload[field] !== 0) {
         throw new Error(`Campo requerido faltante: ${field}`);
       }
     }
-   
-    console.log('Guardando datos del auto:', carDataPayload);
-       
+
     const response = await carService.createCar(carDataPayload);
-     
+
     if (response && (response.id || response.data?.id)) {
       createdCarId.value = response.id || response.data.id;
-      console.log('Auto creado exitosamente con ID:', createdCarId.value);
       alert(t('adminCertification.alertCarSaved'));
     } else {
       throw new Error('Respuesta inválida del servidor');
     }
-   
+
   } catch (error) {
     console.error('Error al guardar el auto:', error);
     const errorMessage = error.response?.data?.message || error.message || 'Error desconocido';
@@ -130,49 +130,20 @@ const handleSaveCarData = async (formData) => {
   }
 };
 
-const handlePdfUploaded = async (payload) => {
-  if (!payload || !payload.carId || !payload.pdfCertification) {
-    console.error('Payload inválido para subir PDF');
-    return;
-  }
-
-  const pdfToSend = payload.pdfCertification;
-  
-  console.log('PDF a enviar - Longitud:', pdfToSend.length);
-  console.log('PDF a enviar - Primeros 50 chars:', pdfToSend.substring(0, 50));
-  console.log('Verificación de prefijo:', pdfToSend.startsWith('data:application/pdf;base64,') ? 'CORRECTO - TIENE PREFIJO' : 'ERROR - SIN PREFIJO');
-
-  isUploadingPdfStatus.value = true;
-  
-  try {
-    await carService.updateCar(payload.carId, {
-      pdfCertification: pdfToSend 
-    });
-    
-    console.log(`PDF para el auto ${payload.carId} actualizado con éxito con prefijo completo.`);
-    alert(t('adminCertification.alertPdfUploaded'));
-    
-  } catch (error) {
-    console.error('Error al actualizar el PDF del auto:', error);
-    alert(t('adminCertification.alertPdfUploadError') + error.message);
-  } finally {
-    isUploadingPdfStatus.value = false;
-  }
-};
-
 const completedSteps = computed(() => {
   let steps = 0;
   if (acceptedReservationData.value) steps++;
-  if (createdCarId.value) steps++;
+  if (isStep2Complete.value) steps++;
+  if (isStep3Complete.value) steps++;
   return steps;
 });
 
 const resetProcess = () => {
   acceptedReservationData.value = null;
-  adFormData.value = {};
+  adFormState.value = { data: {}, isValid: false };
+  pdfState.value = null;
   createdCarId.value = null;
   isSavingCar.value = false;
-  isUploadingPdfStatus.value = false;
 };
 
 const handleLogout = () => {
@@ -218,26 +189,27 @@ const handleLogout = () => {
         </div>
         
         <div class="step-connector" :class="{ 'completed': acceptedReservationData }"></div>
-        
+
         <div class="step" :class="{
-          'completed': createdCarId, 
-          'active': acceptedReservationData && !createdCarId
+          'completed': isStep2Complete,
+          'active': acceptedReservationData && !isStep2Complete
         }">
           <div class="step-icon">
-            <i class="pi pi-check" v-if="createdCarId"></i>
+            <i class="pi pi-check" v-if="isStep2Complete"></i>
             <span v-else>2</span>
           </div>
           <span class="step-label">{{ t('adminCertification.step2') }}</span>
         </div>
-        
-        <div class="step-connector" :class="{ 'completed': createdCarId }"></div>
-        
+
+        <div class="step-connector" :class="{ 'completed': isStep2Complete }"></div>
+
         <div class="step" :class="{
-          'completed': false,
-          'active': createdCarId
+          'completed': isStep3Complete,
+          'active': acceptedReservationData && !isStep3Complete
         }">
           <div class="step-icon">
-            <span>3</span>
+            <i class="pi pi-check" v-if="isStep3Complete"></i>
+            <span v-else>3</span>
           </div>
           <span class="step-label">{{ t('adminCertification.step3') }}</span>
         </div>
@@ -261,47 +233,47 @@ const handleLogout = () => {
         <AcceptReservationComponent @reservationAccepted="handleReservationAccepted" />
       </div>
       
-      <!-- Step 2: Fill Form and Save -->
+      <!-- Step 2: Vehicle Data -->
       <div class="component-section" :class="{ 'disabled': !acceptedReservationData }">
         <div class="step-header">
           <h3 class="step-title">
             <span class="step-number">2</span>
             {{ t('adminCertification.step2Title') }}
           </h3>
-          <div v-if="createdCarId" class="step-status completed">
+          <div v-if="isStep2Complete" class="step-status completed">
             <i class="pi pi-check-circle"></i>
-            <span>{{ t('adminCertification.step2CarId', { createdCarId }) }}</span>
+            <span>{{ t('adminCertification.step2Completed') }}</span>
           </div>
           <div v-else-if="!acceptedReservationData" class="step-status disabled">
             <i class="pi pi-lock"></i>
             <span>{{ t('adminCertification.step2Locked') }}</span>
           </div>
         </div>
-        <AdFormComponent 
-          :initialData="acceptedReservationData" 
-          @update:formData="handleAdFormUpdate" 
-          @saveCar="handleSaveCarData"
-          :isSaving="isSavingCar"
+        <AdFormComponent
+          :initialData="acceptedReservationData"
+          @update:formData="handleAdFormUpdate"
         />
       </div>
-      
+
       <!-- Step 3: Upload PDF -->
-      <div class="component-section" :class="{ 'disabled': !createdCarId }">
+      <div class="component-section" :class="{ 'disabled': !acceptedReservationData }">
         <div class="step-header">
           <h3 class="step-title">
             <span class="step-number">3</span>
             {{ t('adminCertification.step3Title') }}
           </h3>
-          <div v-if="!createdCarId" class="step-status disabled">
+          <div v-if="isStep3Complete" class="step-status completed">
+            <i class="pi pi-check-circle"></i>
+            <span>{{ t('adminCertification.step3Completed') }}</span>
+          </div>
+          <div v-else-if="!acceptedReservationData" class="step-status disabled">
             <i class="pi pi-lock"></i>
             <span>{{ t('adminCertification.step3Locked') }}</span>
           </div>
         </div>
-        <UploadCertificationComponent 
-          v-if="createdCarId" 
-          :carId="createdCarId" 
-          @pdfUploaded="handlePdfUploaded" 
-          :isUploadingPdf="isUploadingPdfStatus"
+        <UploadCertificationComponent
+          v-if="acceptedReservationData"
+          @update:pdfData="handlePdfDataUpdate"
         />
         <div v-else class="placeholder-message">
           <div class="placeholder-content">
@@ -310,6 +282,26 @@ const handleLogout = () => {
             <p>{{ t('adminCertification.completePreviousSteps') }}</p>
           </div>
         </div>
+      </div>
+
+      <!-- Final Save -->
+      <div class="component-section final-save-section">
+        <div v-if="createdCarId" class="final-save-success">
+          <i class="pi pi-check-circle"></i>
+          <div>
+            <h4>{{ t('adminCertification.carCreatedTitle') }}</h4>
+            <p>{{ t('adminCertification.step2CarId', { createdCarId }) }}</p>
+          </div>
+        </div>
+        <pv-button
+          v-else
+          :label="t('adminCertification.finalSaveLabel')"
+          icon="pi pi-save"
+          class="p-button-lg final-save-button"
+          @click="handleFinalizeCar"
+          :disabled="!isReadyToFinalize || isSavingCar"
+          :loading="isSavingCar"
+        />
       </div>
     </div>
   </div>
@@ -560,6 +552,63 @@ const handleLogout = () => {
 .placeholder-content p {
   font-size: 1rem;
   margin: 0;
+}
+
+/* Final Save */
+.final-save-section {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+}
+
+.final-save-button {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  border: none !important;
+  padding: 1.25rem 2.5rem !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4) !important;
+  transition: all 0.3s ease !important;
+}
+
+.final-save-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669, #047857) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(16, 185, 129, 0.5) !important;
+}
+
+.final-save-button:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.final-save-success {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: #065f46;
+}
+
+.final-save-success i {
+  font-size: 2rem;
+  color: #10b981;
+}
+
+.final-save-success h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.final-save-success p {
+  margin: 0;
+  color: #059669;
 }
 
 /* Responsive Design */

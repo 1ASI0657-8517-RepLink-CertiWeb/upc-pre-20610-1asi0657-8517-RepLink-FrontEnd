@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineEmits, computed } from 'vue';
+import { ref, defineEmits, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -9,18 +9,11 @@ const isUploading = ref(false);
 const uploadProgress = ref(0);
 const base64Data = ref(null);
 
-const props = defineProps({
-  carId: {
-    type: [String, Number],
-    required: true
-  },
-  isUploadingPdf: {
-    type: Boolean,
-    default: false
-  }
-});
+const emit = defineEmits(['update:pdfData']);
 
-const emit = defineEmits(['pdfUploaded']);
+watch(base64Data, (newValue) => {
+  emit('update:pdfData', newValue ? { pdfCertification: newValue, fileName: selectedFile.value?.name } : null);
+});
 
 const fileSize = computed(() => {
   if (!selectedFile.value) return '';
@@ -67,36 +60,6 @@ const simulateUpload = () => {
       isUploading.value = false;
     }
   }, 100);
-};
-
-const uploadPdfToDatabase = async () => {
-  if (!base64Data.value || !props.carId) {
-    console.error('No hay PDF o ID de auto para subir');
-    return;
-  }
-
-  try {
-    console.log('Archivo original:', selectedFile.value.name);
-    console.log('Tamaño del archivo:', selectedFile.value.size);
-    console.log('Tipo de archivo:', selectedFile.value.type);
-    console.log('Base64 original (primeros 100 chars):', base64Data.value.substring(0, 100));
-    
-    const pdfToSend = base64Data.value;
-    
-    console.log('PDF final a enviar (primeros 100 chars):', pdfToSend.substring(0, 100));
-    console.log('Longitud del PDF final:', pdfToSend.length);
-    console.log('Prefijo verificado:', pdfToSend.startsWith('data:application/pdf;base64,') ? 'SÍ TIENE PREFIJO' : 'NO TIENE PREFIJO');
-    
-    emit('pdfUploaded', {
-      carId: props.carId,
-      pdfCertification: pdfToSend,
-      fileName: selectedFile.value.name
-    });
-    
-    console.log(`PDF enviado para el auto ${props.carId} con prefijo completo`);
-  } catch (error) {
-    console.error('Error al enviar PDF:', error);
-  }
 };
 
 const removeFile = () => {
@@ -146,7 +109,7 @@ const onDrop = () => {
         </div>
         <div class="header-text">
           <h3 class="section-title">{{ t('uploadTechReport.title') }}</h3>
-          <p class="section-subtitle">{{ t('uploadTechReport.subtitle', { carId: carId }) }}</p>
+          <p class="section-subtitle">{{ t('uploadTechReport.subtitle') }}</p>
         </div>
       </div>
     </div>
@@ -289,18 +252,6 @@ const onDrop = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- Upload to Database Button -->
-        <div v-if="!isUploading && isValidFile && base64Data" class="upload-to-db">
-          <pv-button 
-            :label="t('uploadButton.label')"
-            icon="pi pi-cloud-upload"
-            class="upload-db-button"
-            @click="uploadPdfToDatabase"
-            :disabled="props.isUploadingPdf"
-            :loading="props.isUploadingPdf"
-          />
         </div>
 
         <!-- Success Message -->
@@ -742,36 +693,6 @@ const onDrop = () => {
   border-color: #9ca3af !important;
 }
 
-/* Upload to Database */
-.upload-to-db {
-  text-align: center;
-}
-
-.upload-db-button {
-  background: linear-gradient(135deg, #10b981, #059669) !important;
-  border: none !important;
-  padding: 1rem 2rem !important;
-  font-size: 1rem !important;
-  font-weight: 700 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4) !important;
-  transition: all 0.3s ease !important;
-  width: 100%;
-  max-width: 300px;
-}
-
-.upload-db-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #059669, #047857) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(16, 185, 129, 0.5) !important;
-}
-
-.upload-db-button:disabled {
-  opacity: 0.6 !important;
-  cursor: not-allowed !important;
-  transform: none !important;
-}
-
 /* Success Message */
 .success-message {
   background: #d1fae5;
@@ -857,12 +778,6 @@ const onDrop = () => {
   
   .upload-description {
     font-size: 1rem;
-  }
-  
-  .upload-db-button {
-    width: auto !important;
-    padding: 1.25rem 2.5rem !important;
-    font-size: 1.1rem !important;
   }
 }
 

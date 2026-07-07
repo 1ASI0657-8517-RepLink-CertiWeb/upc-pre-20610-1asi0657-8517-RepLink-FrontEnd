@@ -7,14 +7,10 @@ const props = defineProps({
   initialData: {
     type: Object,
     default: null
-  },
-  isSaving: {
-    type: Boolean,
-    default: false
   }
 });
 
-const emit = defineEmits(['update:formData', 'saveCar']);
+const emit = defineEmits(['update:formData']);
 
 const formData = ref({
   title: '',
@@ -42,15 +38,11 @@ watch(() => props.initialData, (newData) => {
   }
 }, { immediate: true });
 
-watch(formData, (newData) => {
-  emit('update:formData', newData);
-}, { deep: true });
-
 const isFormValid = computed(() => {
   const currentYear = new Date().getFullYear();
   const year = formData.value.year;
   const licensePlate = formData.value.licensePlate;
-  
+
   return formData.value.title &&
          formData.value.owner &&
          formData.value.ownerEmail &&
@@ -60,6 +52,10 @@ const isFormValid = computed(() => {
          formData.value.description &&
          licensePlate && licensePlate.length >= 6 && licensePlate.length <= 10;
 });
+
+watch(formData, (newData) => {
+  emit('update:formData', { data: newData, isValid: isFormValid.value });
+}, { deep: true, immediate: true });
 
 const formProgress = computed(() => {
   const fields = [
@@ -73,17 +69,6 @@ const formProgress = computed(() => {
   ];
   const filledFields = fields.filter(field => field && field.toString().trim()).length;
   return Math.round((filledFields / fields.length) * 100);
-});
-
-const handleSaveCar = () => {
-  if (isFormValid.value) {
-    emit('saveCar', formData.value);
-  }
-};
-
-defineExpose({
-  formData,
-  isFormValid
 });
 </script>
 
@@ -293,18 +278,6 @@ defineExpose({
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Save Button -->
-      <div class="form-actions">
-        <pv-button 
-          :label="t('adForm.saveVehicleInfo')"
-          icon="pi pi-save"
-          class="p-button-primary p-button-lg save-button"
-          @click="handleSaveCar"
-          :disabled="!isFormValid || props.isSaving"
-          :loading="props.isSaving"
-        />
       </div>
 
       <!-- Form Status -->
@@ -562,35 +535,6 @@ defineExpose({
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   border: 1px solid #e5e7eb;
-}
-
-/* Form Actions */
-.form-actions {
-  margin-top: 2.5rem;
-  text-align: center;
-}
-
-.save-button {
-  background: linear-gradient(135deg, #10b981, #059669) !important;
-  border: none !important;
-  padding: 1.25rem 2.5rem !important;
-  font-size: 1.1rem !important;
-  font-weight: 700 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4) !important;
-  transition: all 0.3s ease !important;
-}
-
-.save-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #059669, #047857) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(16, 185, 129, 0.5) !important;
-}
-
-.save-button:disabled {
-  opacity: 0.6 !important;
-  cursor: not-allowed !important;
-  transform: none !important;
 }
 
 /* Form Status */
