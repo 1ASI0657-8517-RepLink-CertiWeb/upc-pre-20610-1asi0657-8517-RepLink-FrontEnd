@@ -41,7 +41,7 @@ const onSelect = async (event) => {
   try {
     const base64Result = await convertToBase64(selectedFile.value);
     base64Data.value = base64Result;
-    
+
     console.log('PDF converted to base64:', base64Result.substring(0, 100) + '...');
   } catch (error) {
     console.error('Error converting file:', error);
@@ -52,7 +52,7 @@ const onSelect = async (event) => {
 const simulateUpload = () => {
   isUploading.value = true;
   uploadProgress.value = 0;
-  
+
   const interval = setInterval(() => {
     uploadProgress.value += 10;
     if (uploadProgress.value >= 100) {
@@ -117,7 +117,7 @@ const onDrop = () => {
     <!-- Upload Area -->
     <div class="upload-content">
       <!-- File Upload Zone -->
-      <div 
+      <div
         v-if="!selectedFile"
         class="upload-zone"
         :class="{ 'drag-over': isDragOver }"
@@ -129,7 +129,7 @@ const onDrop = () => {
           <div class="upload-icon">
             <i class="pi pi-cloud-upload"></i>
           </div>
-          
+
           <div class="upload-text">
             <h4 class="upload-title">{{ t('uploadZone.selectOrDrag') }}</h4>
             <p class="upload-description">
@@ -137,15 +137,15 @@ const onDrop = () => {
             </p>
           </div>
 
-          <pv-fileupload 
-            mode="basic" 
-            name="informe" 
+          <pv-fileupload
+            mode="basic"
+            name="informe"
             accept=".pdf"
-            :maxFileSize="10000000" 
-            @select="onSelect" 
+            :maxFileSize="10000000"
+            @select="onSelect"
             :chooseLabel="t('uploadZone.selectFile')"
             class="custom-file-upload"
-            :auto="false" 
+            :auto="false"
           />
 
           <div class="upload-features">
@@ -174,8 +174,8 @@ const onDrop = () => {
             <span class="progress-percentage">{{ uploadProgress }}%</span>
           </div>
           <div class="progress-bar">
-            <div 
-              class="progress-fill" 
+            <div
+              class="progress-fill"
               :style="{ width: uploadProgress + '%' }"
             ></div>
           </div>
@@ -192,7 +192,7 @@ const onDrop = () => {
                 <i class="pi pi-check"></i>
               </div>
             </div>
-            
+
             <div class="file-details">
               <h5 class="file-name">{{ selectedFile.name }}</h5>
               <div class="file-meta">
@@ -209,10 +209,11 @@ const onDrop = () => {
               </div>
             </div>
 
-            <pv-button 
+            <pv-button
               v-if="!isUploading"
               @click="removeFile"
               class="remove-button"
+              :aria-label="t('fileState.removeFile')"
               :title="t('fileState.removeFile')"
             >
               <i class="pi pi-times"></i>
@@ -228,7 +229,7 @@ const onDrop = () => {
               {{ t('preview.title') }}
             </h5>
           </div>
-          
+
           <div class="preview-content">
             <div class="preview-card">
               <div class="preview-icon">
@@ -257,9 +258,7 @@ const onDrop = () => {
         <!-- Success Message -->
         <div v-if="!isUploading && isValidFile && base64Data" class="success-message">
           <div class="success-content">
-            <div class="success-icon">
-              <i class="pi pi-check-circle"></i>
-            </div>
+            <verified-seal size="md" :label="t('successMessage.title')" />
             <div class="success-text">
               <h6 class="success-title">{{ t('successMessage.title') }}</h6>
               <p class="success-description">
@@ -274,24 +273,22 @@ const onDrop = () => {
 </template>
 
 <style scoped>
-/* Container Styles */
 .upload-container {
+  box-sizing: border-box;
   max-width: 800px;
   margin: 0 auto;
   padding: 1rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  min-height: 100vh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--color-paper, #FCFCFA);
+  font-family: var(--font-body, 'Inter', sans-serif);
 }
 
 /* Header Styles */
 .upload-header {
-  background: white;
-  border-radius: 16px;
+  background: var(--color-paper, #FCFCFA);
+  border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .header-content {
@@ -304,14 +301,13 @@ const onDrop = () => {
 .header-icon {
   width: 3rem;
   height: 3rem;
-  background: linear-gradient(135deg, #dc2626, #ef4444);
-  border-radius: 12px;
+  background: var(--color-brand, #1B4B3A);
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--color-paper, #FCFCFA);
   font-size: 1.25rem;
-  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
   flex-shrink: 0;
 }
 
@@ -321,20 +317,17 @@ const onDrop = () => {
 }
 
 .section-title {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin: 0 0 0.5rem 0;
-  background: linear-gradient(135deg, #1e293b, #dc2626);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
+  margin: 0 0 0.4rem 0;
   line-height: 1.2;
 }
 
 .section-subtitle {
-  font-size: 0.95rem;
-  color: #64748b;
+  font-size: 0.9rem;
+  color: var(--color-graphite, #5C645F);
   margin: 0;
   font-weight: 500;
   line-height: 1.4;
@@ -342,47 +335,43 @@ const onDrop = () => {
 
 /* Upload Content */
 .upload-content {
-  background: white;
-  border-radius: 16px;
+  background: var(--color-paper, #FCFCFA);
+  border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 /* Upload Zone */
 .upload-zone {
-  border: 2px dashed #d1d5db;
-  border-radius: 12px;
+  border: 2px dashed var(--color-border, #D8DFDA);
+  border-radius: 10px;
   padding: 2rem;
   text-align: center;
-  transition: all 0.3s ease;
-  background: #f9fafb;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  background: var(--color-brand-soft, #E8F0EC);
 }
 
 .upload-zone.drag-over {
-  border-color: #3b82f6;
-  background: #eff6ff;
-  transform: scale(1.02);
+  border-color: var(--color-brand, #1B4B3A);
 }
 
 .upload-zone-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .upload-icon {
-  width: 4rem;
-  height: 4rem;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  width: 3.5rem;
+  height: 3.5rem;
+  background: var(--color-brand, #1B4B3A);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 1.5rem;
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+  color: var(--color-paper, #FCFCFA);
+  font-size: 1.4rem;
 }
 
 .upload-text {
@@ -390,21 +379,22 @@ const onDrop = () => {
 }
 
 .upload-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 0.5rem 0;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
+  margin: 0 0 0.4rem 0;
 }
 
 .upload-description {
-  font-size: 0.9rem;
-  color: #64748b;
+  font-size: 0.88rem;
+  color: var(--color-graphite, #5C645F);
   margin: 0;
   line-height: 1.4;
 }
 
 .custom-file-upload {
-  margin: 1rem 0;
+  margin: 0.5rem 0;
 }
 
 .upload-features {
@@ -418,12 +408,12 @@ const onDrop = () => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.85rem;
-  color: #64748b;
+  font-size: 0.82rem;
+  color: var(--color-graphite, #5C645F);
 }
 
 .feature-icon {
-  color: #3b82f6;
+  color: var(--color-brand, #1B4B3A);
   font-size: 0.9rem;
 }
 
@@ -436,10 +426,10 @@ const onDrop = () => {
 
 /* Upload Progress */
 .upload-progress {
-  background: #f8fafc;
-  border-radius: 12px;
+  background: var(--color-brand-soft, #E8F0EC);
+  border-radius: 10px;
   padding: 1.25rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .progress-header {
@@ -453,43 +443,43 @@ const onDrop = () => {
 
 .progress-text {
   font-weight: 600;
-  color: #475569;
+  color: var(--color-ink, #12211C);
   font-size: 0.9rem;
 }
 
 .progress-percentage {
   font-weight: 700;
-  color: #3b82f6;
+  color: var(--color-brand, #1B4B3A);
   font-size: 1rem;
 }
 
 .progress-bar {
   width: 100%;
   height: 8px;
-  background: #e2e8f0;
+  background: var(--color-border, #D8DFDA);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  background: var(--color-brand, #1B4B3A);
   border-radius: 4px;
-  transition: width 0.5s ease;
+  transition: width 0.4s ease;
 }
 
 /* File Card */
 .file-card {
-  background: white;
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
+  background: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
+  border-radius: 10px;
   padding: 1.25rem;
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .file-card.uploading {
-  border-color: #3b82f6;
-  background: #eff6ff;
+  border-color: var(--color-brand, #1B4B3A);
+  background: var(--color-brand-soft, #E8F0EC);
 }
 
 .file-info {
@@ -504,31 +494,31 @@ const onDrop = () => {
 }
 
 .file-icon {
-  width: 3rem;
-  height: 3rem;
-  background: linear-gradient(135deg, #dc2626, #ef4444);
+  width: 2.75rem;
+  height: 2.75rem;
+  background: var(--color-brand, #1B4B3A);
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 1.25rem;
+  color: var(--color-paper, #FCFCFA);
+  font-size: 1.2rem;
 }
 
 .file-status {
   position: absolute;
   top: -0.25rem;
   right: -0.25rem;
-  width: 1.25rem;
-  height: 1.25rem;
-  background: #10b981;
+  width: 1.2rem;
+  height: 1.2rem;
+  background: var(--color-brand, #1B4B3A);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 0.7rem;
-  border: 2px solid white;
+  color: var(--color-paper, #FCFCFA);
+  font-size: 0.65rem;
+  border: 2px solid var(--color-paper, #FCFCFA);
 }
 
 .file-details {
@@ -539,7 +529,7 @@ const onDrop = () => {
 .file-name {
   font-size: 1rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--color-ink, #12211C);
   margin: 0 0 0.5rem 0;
   word-break: break-word;
 }
@@ -553,10 +543,10 @@ const onDrop = () => {
 
 .file-size,
 .file-type {
-  font-size: 0.8rem;
-  color: #64748b;
-  background: #f1f5f9;
-  padding: 0.25rem 0.5rem;
+  font-size: 0.78rem;
+  color: var(--color-graphite, #5C645F);
+  background: var(--color-brand-soft, #E8F0EC);
+  padding: 0.2rem 0.5rem;
   border-radius: 6px;
 }
 
@@ -565,12 +555,12 @@ const onDrop = () => {
   align-items: center;
   gap: 0.5rem;
   font-size: 0.85rem;
-  color: #dc2626;
+  color: #a02525;
   margin-bottom: 0.5rem;
 }
 
 .file-validation.valid {
-  color: #10b981;
+  color: var(--color-brand, #1B4B3A);
 }
 
 .file-validation i {
@@ -581,14 +571,14 @@ const onDrop = () => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.8rem;
-  color: #64748b;
+  font-size: 0.78rem;
+  color: var(--color-graphite, #5C645F);
 }
 
-.remove-button {
-  background: #fee2e2 !important;
-  border: 1px solid #fecaca !important;
-  color: #dc2626 !important;
+:deep(.remove-button) {
+  background: #fdf2f2 !important;
+  border: 1px solid #f0caca !important;
+  color: #a02525 !important;
   padding: 0.5rem !important;
   border-radius: 8px !important;
   width: 2.5rem;
@@ -596,17 +586,17 @@ const onDrop = () => {
   flex-shrink: 0;
 }
 
-.remove-button:hover {
-  background: #fecaca !important;
-  border-color: #fca5a5 !important;
+:deep(.remove-button:hover) {
+  background: #fbe2e2 !important;
+  border-color: #e0a8a8 !important;
 }
 
 /* PDF Preview */
 .pdf-preview {
-  background: #f8fafc;
-  border-radius: 12px;
+  background: var(--color-brand-soft, #E8F0EC);
+  border-radius: 10px;
   padding: 1.25rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .preview-header {
@@ -617,21 +607,22 @@ const onDrop = () => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1.1rem;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.05rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--color-ink, #12211C);
   margin: 0;
 }
 
 .preview-title i {
-  color: #3b82f6;
+  color: var(--color-brand, #1B4B3A);
 }
 
 .preview-content {
-  background: white;
+  background: var(--color-paper, #FCFCFA);
   border-radius: 8px;
   padding: 1rem;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .preview-card {
@@ -643,12 +634,12 @@ const onDrop = () => {
 .preview-icon {
   width: 2.5rem;
   height: 2.5rem;
-  background: linear-gradient(135deg, #dc2626, #ef4444);
+  background: var(--color-brand, #1B4B3A);
   border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--color-paper, #FCFCFA);
   font-size: 1rem;
   flex-shrink: 0;
 }
@@ -661,14 +652,14 @@ const onDrop = () => {
 .preview-filename {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--color-ink, #12211C);
   margin: 0 0 0.5rem 0;
   word-break: break-word;
 }
 
 .preview-description {
   font-size: 0.8rem;
-  color: #64748b;
+  color: var(--color-graphite, #5C645F);
   margin: 0 0 1rem 0;
   line-height: 1.4;
 }
@@ -679,25 +670,25 @@ const onDrop = () => {
   flex-wrap: wrap;
 }
 
-.preview-button {
-  background: #f1f5f9 !important;
-  border: 1px solid #d1d5db !important;
-  color: #374151 !important;
+:deep(.preview-button) {
+  background: var(--color-paper, #FCFCFA) !important;
+  border: 1px solid var(--color-border, #D8DFDA) !important;
+  color: var(--color-ink, #12211C) !important;
   padding: 0.5rem 1rem !important;
   font-size: 0.8rem !important;
   border-radius: 6px !important;
 }
 
-.preview-button:hover {
-  background: #e2e8f0 !important;
-  border-color: #9ca3af !important;
+:deep(.preview-button:hover) {
+  background: var(--color-brand-soft, #E8F0EC) !important;
+  border-color: var(--color-brand, #1B4B3A) !important;
 }
 
 /* Success Message */
 .success-message {
-  background: #d1fae5;
-  border: 2px solid #10b981;
-  border-radius: 12px;
+  background: var(--color-brand-soft, #E8F0EC);
+  border: 1px solid var(--color-brand, #1B4B3A);
+  border-radius: 10px;
   padding: 1.25rem;
 }
 
@@ -707,30 +698,29 @@ const onDrop = () => {
   gap: 1rem;
 }
 
-.success-icon {
-  font-size: 1.5rem;
-  color: #10b981;
-  flex-shrink: 0;
-  margin-top: 0.1rem;
-}
-
 .success-text {
   flex: 1;
 }
 
 .success-title {
   font-weight: 600;
-  color: #065f46;
+  color: var(--color-ink, #12211C);
   font-size: 1rem;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.4rem 0;
   line-height: 1.3;
 }
 
 .success-description {
   font-size: 0.9rem;
-  color: #047857;
+  color: var(--color-graphite, #5C645F);
   margin: 0;
   line-height: 1.4;
+}
+
+/* Focus visibility for interactive elements */
+:deep(.p-button:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 /* Responsive Design */
@@ -738,44 +728,44 @@ const onDrop = () => {
   .upload-container {
     padding: 1.5rem;
   }
-  
+
   .upload-header,
   .upload-content {
     padding: 2rem;
   }
-  
+
   .header-content {
     flex-wrap: nowrap;
   }
-  
+
   .header-icon {
     width: 3.5rem;
     height: 3.5rem;
     font-size: 1.5rem;
   }
-  
+
   .section-title {
-    font-size: 1.75rem;
+    font-size: 1.6rem;
   }
-  
+
   .section-subtitle {
     font-size: 1rem;
   }
-  
+
   .upload-zone {
     padding: 3rem;
   }
-  
+
   .upload-icon {
-    width: 5rem;
-    height: 5rem;
-    font-size: 2rem;
+    width: 4.5rem;
+    height: 4.5rem;
+    font-size: 1.75rem;
   }
-  
+
   .upload-title {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
-  
+
   .upload-description {
     font-size: 1rem;
   }
@@ -785,15 +775,15 @@ const onDrop = () => {
   .upload-container {
     padding: 2rem;
   }
-  
+
   .section-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
-  
+
   .preview-card {
     align-items: flex-start;
   }
-  
+
   .success-content {
     align-items: center;
   }
@@ -804,11 +794,11 @@ const onDrop = () => {
   .upload-content {
     padding: 2.5rem;
   }
-  
+
   .section-title {
-    font-size: 2.25rem;
+    font-size: 1.9rem;
   }
-  
+
   .header-icon {
     width: 4rem;
     height: 4rem;
@@ -822,7 +812,7 @@ const onDrop = () => {
   .upload-content {
     border: 2px solid #000;
   }
-  
+
   .section-title {
     color: #000;
   }
@@ -831,8 +821,6 @@ const onDrop = () => {
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
   * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }

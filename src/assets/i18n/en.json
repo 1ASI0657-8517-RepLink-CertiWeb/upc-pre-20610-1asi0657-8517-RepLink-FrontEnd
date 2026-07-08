@@ -103,6 +103,8 @@
     "brandPlaceholder": "Vehicle brand (auto-completed)",
     "model": "Model",
     "modelPlaceholder": "Vehicle model (auto-completed)",
+    "licensePlate": "License Plate",
+    "licensePlatePlaceholder": "Vehicle license plate (auto-completed)",
     "detailedDescription": "Detailed Description",
     "descriptionPlaceholder": "Describe the features, condition, and any relevant details of your vehicle...",
     "characters": "characters",

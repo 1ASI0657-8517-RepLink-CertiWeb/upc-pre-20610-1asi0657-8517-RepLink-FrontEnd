@@ -95,6 +95,8 @@
     "brandPlaceholder": "Marca del vehículo (autocompletado)",
     "model": "Modelo",
     "modelPlaceholder": "Modelo del vehículo (autocompletado)",
+    "licensePlate": "Placa",
+    "licensePlatePlaceholder": "Placa del vehículo (autocompletado)",
     "detailedDescription": "Descripción Detallada",
     "descriptionPlaceholder": "Describa las características, estado y cualquier detalle relevante de su vehículo...",
     "characters": "caracteres",

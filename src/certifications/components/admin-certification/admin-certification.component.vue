@@ -163,22 +163,22 @@ const handleLogout = () => {
         </h2>
         <div class="progress-stats">
           <span class="steps-completed">{{ t('adminCertification.stepsCompleted', { completedSteps }) }}</span>
-          <pv-button 
+          <pv-button
             v-if="completedSteps > 0"
-            :label="t('adminCertification.resetProcess')" 
-            icon="pi pi-refresh" 
-            class="p-button-text p-button-sm p-button-raised p-button-info"
+            :label="t('adminCertification.resetProcess')"
+            icon="pi pi-refresh"
+            class="p-button-text p-button-sm reset-button"
             @click="resetProcess"
           />
-          <pv-button 
-            :label="t('adminCertification.logout')" 
-            icon="pi pi-sign-out" 
-            class="p-button-text p-button-sm p-button-danger"
+          <pv-button
+            :label="t('adminCertification.logout')"
+            icon="pi pi-sign-out"
+            class="p-button-text p-button-sm logout-button"
             @click="handleLogout"
           />
         </div>
       </div>
-      
+
       <div class="progress-steps">
         <div class="step" :class="{ 'completed': acceptedReservationData, 'active': !acceptedReservationData }">
           <div class="step-icon">
@@ -187,7 +187,7 @@ const handleLogout = () => {
           </div>
           <span class="step-label">{{ t('adminCertification.step1') }}</span>
         </div>
-        
+
         <div class="step-connector" :class="{ 'completed': acceptedReservationData }"></div>
 
         <div class="step" :class="{
@@ -232,7 +232,7 @@ const handleLogout = () => {
         </div>
         <AcceptReservationComponent @reservationAccepted="handleReservationAccepted" />
       </div>
-      
+
       <!-- Step 2: Vehicle Data -->
       <div class="component-section" :class="{ 'disabled': !acceptedReservationData }">
         <div class="step-header">
@@ -287,7 +287,7 @@ const handleLogout = () => {
       <!-- Final Save -->
       <div class="component-section final-save-section">
         <div v-if="createdCarId" class="final-save-success">
-          <i class="pi pi-check-circle"></i>
+          <verified-seal size="lg" :label="t('adminCertification.carCreatedTitle')" />
           <div>
             <h4>{{ t('adminCertification.carCreatedTitle') }}</h4>
             <p>{{ t('adminCertification.step2CarId', { createdCarId }) }}</p>
@@ -308,67 +308,73 @@ const handleLogout = () => {
 </template>
 
 <style scoped>
-/* Container Styles */
 .admin-certification-container {
+  box-sizing: border-box;
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  background: var(--color-paper, #FCFCFA);
   min-height: 100vh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-body, 'Inter', sans-serif);
 }
 
 /* Progress Indicator */
 .progress-indicator {
-  background: white;
-  border-radius: 20px;
+  background: var(--color-paper, #FCFCFA);
+  border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .progress-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
   margin-bottom: 2rem;
 }
 
 .progress-title {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #1e293b;
+  gap: 0.75rem;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   margin: 0;
 }
 
 .progress-title i {
-  color: #3b82f6;
-  font-size: 1.5rem;
+  color: var(--color-brand, #1B4B3A);
+  font-size: 1.3rem;
 }
 
 .progress-stats {
   display: flex;
   align-items: center;
-  gap: 0.5rem; /* Reducido para mejor ajuste */
-  background: #f1f5f9;
-  padding: 0.75rem 1rem; /* Ajustado padding */
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-}
-
-/* Asegurar que los botones no se superpongan demasiado */
-.progress-stats .p-button-sm {
-  margin-left: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  background: var(--color-brand-soft, #E8F0EC);
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .steps-completed {
   font-weight: 600;
-  color: #475569;
-  font-size: 0.95rem;
+  color: var(--color-ink, #12211C);
+  font-size: 0.9rem;
+}
+
+:deep(.reset-button.p-button-text) {
+  color: var(--color-brand, #1B4B3A) !important;
+}
+
+:deep(.logout-button.p-button-text) {
+  color: #a02525 !important;
 }
 
 .progress-steps {
@@ -388,61 +394,56 @@ const handleLogout = () => {
 }
 
 .step-icon {
-  width: 3rem;
-  height: 3rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 1.1rem;
-  transition: all 0.3s ease;
-  border: 3px solid #e2e8f0;
-  background: white;
-  color: #94a3b8;
+  font-size: 1.05rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  border: 2px solid var(--color-border, #D8DFDA);
+  background: var(--color-paper, #FCFCFA);
+  color: var(--color-graphite, #5C645F);
 }
 
 .step.completed .step-icon {
-  background: linear-gradient(135deg, #10b981, #059669);
-  border-color: #10b981;
-  color: white;
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+  background: var(--color-brand, #1B4B3A);
+  border-color: var(--color-brand, #1B4B3A);
+  color: var(--color-paper, #FCFCFA);
 }
 
 .step.active .step-icon {
-  border-color: #3b82f6;
-  background: #f0f9ff;
-  color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-brand, #1B4B3A);
+  background: var(--color-brand-soft, #E8F0EC);
+  color: var(--color-brand, #1B4B3A);
 }
 
 .step-label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--color-graphite, #5C645F);
   text-align: center;
   white-space: nowrap;
 }
 
-.step.completed .step-label {
-  color: #059669;
-}
-
+.step.completed .step-label,
 .step.active .step-label {
-  color: #3b82f6;
+  color: var(--color-brand, #1B4B3A);
 }
 
 .step-connector {
   width: 8rem;
-  height: 3px;
-  background: #e2e8f0;
+  height: 2px;
+  background: var(--color-border, #D8DFDA);
   position: relative;
   z-index: 1;
-  transition: all 0.5s ease;
+  transition: background-color 0.3s ease;
 }
 
 .step-connector.completed {
-  background: linear-gradient(90deg, #10b981, #059669);
+  background: var(--color-brand, #1B4B3A);
 }
 
 /* Components Container */
@@ -454,7 +455,6 @@ const handleLogout = () => {
 
 .component-section {
   position: relative;
-  transition: all 0.3s ease;
 }
 
 .component-section.disabled {
@@ -467,66 +467,69 @@ const handleLogout = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
   margin-bottom: 1rem;
   padding: 1rem 1.5rem;
-  background: white;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background: var(--color-paper, #FCFCFA);
+  border-radius: 10px;
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .step-title {
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   margin: 0;
 }
 
 .step-number {
   width: 2rem;
   height: 2rem;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  color: white;
+  background: var(--color-brand, #1B4B3A);
+  color: var(--color-paper, #FCFCFA);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.9rem;
   font-weight: 700;
+  flex-shrink: 0;
 }
 
 .step-status {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.9rem;
   border-radius: 8px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
 }
 
 .step-status.completed {
-  background: #d1fae5;
-  color: #065f46;
-  border: 1px solid #10b981;
+  background: var(--color-brand-soft, #E8F0EC);
+  color: var(--color-brand, #1B4B3A);
+  border: 1px solid var(--color-brand, #1B4B3A);
 }
 
 .step-status.disabled {
-  background: #f3f4f6;
-  color: #6b7280;
-  border: 1px solid #d1d5db;
+  background: var(--color-paper, #FCFCFA);
+  color: var(--color-graphite, #5C645F);
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 /* Placeholder Message */
 .placeholder-message {
-  background: white;
-  border-radius: 20px;
+  background: var(--color-paper, #FCFCFA);
+  border-radius: 12px;
   padding: 3rem;
   text-align: center;
-  border: 2px dashed #d1d5db;
+  border: 2px dashed var(--color-border, #D8DFDA);
   margin-top: 1rem;
 }
 
@@ -535,18 +538,20 @@ const handleLogout = () => {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  color: #6b7280;
+  color: var(--color-graphite, #5C645F);
 }
 
 .placeholder-content i {
-  font-size: 3rem;
-  color: #d1d5db;
+  font-size: 2.5rem;
+  color: var(--color-graphite, #5C645F);
 }
 
 .placeholder-content h4 {
-  font-size: 1.25rem;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.2rem;
   font-weight: 600;
   margin: 0;
+  color: var(--color-ink, #12211C);
 }
 
 .placeholder-content p {
@@ -556,35 +561,31 @@ const handleLogout = () => {
 
 /* Final Save */
 .final-save-section {
-  background: white;
-  border-radius: 20px;
+  background: var(--color-paper, #FCFCFA);
+  border-radius: 12px;
   padding: 2.5rem;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
-.final-save-button {
-  background: linear-gradient(135deg, #10b981, #059669) !important;
-  border: none !important;
-  padding: 1.25rem 2.5rem !important;
-  font-size: 1.1rem !important;
-  font-weight: 700 !important;
-  border-radius: 12px !important;
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4) !important;
-  transition: all 0.3s ease !important;
+:deep(.final-save-button) {
+  background: var(--color-brand, #1B4B3A) !important;
+  border: 1px solid var(--color-brand, #1B4B3A) !important;
+  padding: 1rem 2rem !important;
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+  border-radius: 10px !important;
+  transition: background-color 0.2s ease !important;
 }
 
-.final-save-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #059669, #047857) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(16, 185, 129, 0.5) !important;
+:deep(.final-save-button:hover:not(:disabled)) {
+  background: var(--color-brand-strong, #123329) !important;
+  border-color: var(--color-brand-strong, #123329) !important;
 }
 
-.final-save-button:disabled {
-  opacity: 0.6 !important;
+:deep(.final-save-button:disabled) {
+  opacity: 0.5 !important;
   cursor: not-allowed !important;
-  transform: none !important;
 }
 
 .final-save-success {
@@ -592,23 +593,28 @@ const handleLogout = () => {
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  color: #065f46;
-}
-
-.final-save-success i {
-  font-size: 2rem;
-  color: #10b981;
+  color: var(--color-brand, #1B4B3A);
 }
 
 .final-save-success h4 {
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
   margin: 0 0 0.25rem 0;
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
+  text-align: left;
 }
 
 .final-save-success p {
   margin: 0;
-  color: #059669;
+  color: var(--color-graphite, #5C645F);
+  text-align: left;
+}
+
+/* Focus visibility */
+:deep(.p-button:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 /* Responsive Design */
@@ -616,13 +622,13 @@ const handleLogout = () => {
   .admin-certification-container {
     padding: 1.5rem;
   }
-  
+
   .progress-header {
     flex-direction: column;
     gap: 1rem;
     text-align: center;
   }
-  
+
   .step-connector {
     width: 4rem;
   }
@@ -632,69 +638,57 @@ const handleLogout = () => {
   .admin-certification-container {
     padding: 1rem;
   }
-  
+
   .progress-indicator {
     padding: 1.5rem;
   }
-  
+
   .progress-title {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .progress-steps {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .step-connector {
-    width: 3px;
+    width: 2px;
     height: 2rem;
-    transform: rotate(90deg);
   }
-  
+
   .step-header {
     flex-direction: column;
     gap: 1rem;
+    text-align: center;
+  }
+
+  .final-save-success {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .final-save-success h4,
+  .final-save-success p {
     text-align: center;
   }
 }
 
 @media (max-width: 480px) {
   .progress-title {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
   }
-  
+
   .step-icon {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 1rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 0.95rem;
   }
-  
+
   .step-label {
     font-size: 0.8rem;
   }
 }
-
-/* Animation for component entrance */
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.progress-indicator,
-.component-section {
-  animation: slideInUp 0.6s ease-out;
-}
-
-.component-section:nth-child(1) { animation-delay: 0.1s; }
-.component-section:nth-child(2) { animation-delay: 0.2s; }
-.component-section:nth-child(3) { animation-delay: 0.3s; }
 </style>

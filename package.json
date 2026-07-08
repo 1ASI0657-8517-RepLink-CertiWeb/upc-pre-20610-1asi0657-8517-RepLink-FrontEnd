@@ -25,6 +25,7 @@
     "vercel:preview": "vercel"
   },
   "dependencies": {
+    "@primevue/themes": "^4.3.4",
     "axios": "^1.9.0",
     "primeicons": "^7.0.0",
     "primevue": "^4.3.4",

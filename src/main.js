@@ -1,9 +1,13 @@
 import { createApp } from 'vue'
 import './style.css'
+import './assets/styles/design-tokens.css'
 import App from './App.vue'
 import PrimeVue from 'primevue/config';
+import { definePreset } from '@primevue/themes';
+import Aura from '@primevue/themes/aura';
 import 'primeicons/primeicons.css';
 import router from "./router/index.js";
+import verifiedSealComponent from './public/components/verified-seal/verified-seal.component.vue';
 import InputText from 'primevue/inputtext';
 import Password from 'primevue/password';
 import Button from 'primevue/button';
@@ -40,8 +44,49 @@ const i18n = createI18n({
   }
 });
 
+const CertiWebPreset = definePreset(Aura, {
+  semantic: {
+    primary: {
+      50: '#EAF2EE',
+      100: '#CFE3D9',
+      200: '#A3C9B7',
+      300: '#74AD93',
+      400: '#4B8F72',
+      500: '#1B4B3A',
+      600: '#163F30',
+      700: '#123328',
+      800: '#0E2620',
+      900: '#091A16',
+      950: '#05100D'
+    },
+    colorScheme: {
+      light: {
+        primary: {
+          color: '{primary.500}',
+          contrastColor: '#ffffff',
+          hoverColor: '{primary.600}',
+          activeColor: '{primary.700}'
+        },
+        highlight: {
+          background: '{primary.50}',
+          focusBackground: '{primary.100}',
+          color: '{primary.700}',
+          focusColor: '{primary.800}'
+        }
+      }
+    }
+  }
+});
+
 const app = createApp(App);
-app.use(PrimeVue);
+app.use(PrimeVue, {
+  theme: {
+    preset: CertiWebPreset,
+    options: {
+      darkModeSelector: false
+    }
+  }
+});
 app.use(ToastService);
 app.use(i18n);
 app.use(router);
@@ -66,5 +111,6 @@ app.component('pv-progress-spinner', ProgressSpinner);
 app.component('pv-carousel', Carousel);
 app.component('pv-input-number', InputNumber);
 app.component('pv-textarea', Textarea);
+app.component('verified-seal', verifiedSealComponent);
 
 app.mount('#app');

@@ -245,15 +245,20 @@ const handleConfirmReservation = async () => {
       <!-- Time -->
       <div class="time-section">
         <h3 class="calendar-subtitle">{{ t('calendar.selectTime') }}</h3>
-        <div class="time-slots">
-          <div 
-            v-for="(horario, index) in horariosDisponibles" 
+        <div class="time-slots" role="radiogroup" :aria-label="t('calendar.selectTime')">
+          <div
+            v-for="(horario, index) in horariosDisponibles"
             :key="index"
             class="time-slot"
-            :class="{ 
+            role="radio"
+            :aria-checked="fechaHora && fechaHora instanceof Date && !isNaN(fechaHora) && fechaHora.getHours() === horario.hour && fechaHora.getMinutes() === 0"
+            tabindex="0"
+            :class="{
               'selected': fechaHora && fechaHora instanceof Date && !isNaN(fechaHora) && fechaHora.getHours() === horario.hour && fechaHora.getMinutes() === 0
             }"
             @click="selectTimeSlot(horario)"
+            @keydown.enter="selectTimeSlot(horario)"
+            @keydown.space.prevent="selectTimeSlot(horario)"
           >
             {{ horario.display }}
           </div>
@@ -294,36 +299,31 @@ const handleConfirmReservation = async () => {
 </template>
 
 <style scoped>
+.calendar-container,
+.calendar-container * {
+  box-sizing: border-box;
+}
+
 .calendar-container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 1.5rem;
-  background: linear-gradient(135deg, #f8fffe 0%, #f0f9f4 100%);
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
+  border-radius: 12px;
+  font-family: var(--font-body, 'Inter', sans-serif);
 }
 
 .subtitulo-formulario {
-  color: #1e4d2b;
-  font-size: 1.75rem;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  color: var(--color-ink, #12211C);
+  font-size: 1.6rem;
   margin-bottom: 2rem;
-  font-weight: 700;
+  font-weight: 600;
   text-align: center;
-  position: relative;
   padding-bottom: 0.75rem;
-}
-
-.subtitulo-formulario::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 3px;
-  background: linear-gradient(90deg, #1e4d2b, #2d6b3f);
-  border-radius: 2px;
+  border-bottom: 2px solid var(--color-brand, #1B4B3A);
 }
 
 .calendar-layout {
@@ -335,49 +335,31 @@ const handleConfirmReservation = async () => {
 
 .calendar-section,
 .time-section {
-  background: white;
+  min-width: 0;
+  background: var(--color-paper, #FCFCFA);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(30, 77, 43, 0.1);
-  transition: all 0.3s ease;
-}
-
-.calendar-section:hover,
-.time-section:hover {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .calendar-subtitle {
-  font-size: 1.25rem;
-  color: #1e4d2b;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.15rem;
+  color: var(--color-ink, #12211C);
   margin-bottom: 1.25rem;
   text-align: center;
   font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.calendar-subtitle::before {
-  content: '';
-  width: 4px;
-  height: 20px;
-  background: linear-gradient(180deg, #1e4d2b, #2d6b3f);
-  border-radius: 2px;
 }
 
 .calendar-note {
   display: block;
   text-align: center;
   margin-top: 1rem;
-  color: #666;
+  color: var(--color-graphite, #5C645F);
   font-size: 0.875rem;
   font-style: italic;
   padding: 0.5rem;
-  background: rgba(30, 77, 43, 0.05);
+  background: var(--color-brand-soft, #E8F0EC);
   border-radius: 6px;
 }
 
@@ -388,56 +370,39 @@ const handleConfirmReservation = async () => {
 }
 
 .time-slot {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border: 2px solid #e9ecef;
-  border-radius: 10px;
+  background: var(--color-paper, #FCFCFA);
+  border: 2px solid var(--color-border, #D8DFDA);
+  border-radius: 8px;
   padding: 1rem 0.5rem;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
   font-weight: 600;
   font-size: 0.95rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.time-slot::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  transition: left 0.5s ease;
 }
 
 .time-slot:hover {
-  background: linear-gradient(135deg, #e6f7e6 0%, #d4edda 100%);
-  border-color: #1e4d2b;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(30, 77, 43, 0.2);
+  background: var(--color-brand-soft, #E8F0EC);
+  border-color: var(--color-brand, #1B4B3A);
 }
 
-.time-slot:hover::before {
-  left: 100%;
+.time-slot:focus-visible {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 .time-slot.selected {
-  background: linear-gradient(135deg, #1e4d2b 0%, #2d6b3f 100%);
-  color: white;
-  border-color: #1e4d2b;
-  box-shadow: 0 4px 15px rgba(30, 77, 43, 0.3);
-  transform: scale(1.05);
+  background: var(--color-brand, #1B4B3A);
+  color: var(--color-paper, #FCFCFA);
+  border-color: var(--color-brand, #1B4B3A);
 }
 
 .selected-datetime {
   margin-top: 2rem;
-  background: linear-gradient(135deg, #e6f7e6 0%, #d4edda 100%);
+  background: var(--color-brand-soft, #E8F0EC);
   border-radius: 12px;
   padding: 1.5rem;
-  border: 1px solid rgba(30, 77, 43, 0.2);
-  box-shadow: 0 2px 10px rgba(30, 77, 43, 0.1);
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .datetime-preview {
@@ -448,10 +413,11 @@ const handleConfirmReservation = async () => {
   font-size: 1.1rem;
   font-weight: 500;
   flex-wrap: wrap;
+  color: var(--color-ink, #12211C);
 }
 
 .datetime-preview i {
-  color: #1e4d2b;
+  color: var(--color-brand, #1B4B3A);
   font-size: 1.25rem;
 }
 
@@ -459,49 +425,50 @@ const handleConfirmReservation = async () => {
   text-align: center;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(30, 77, 43, 0.1);
+  border-top: 1px solid var(--color-border, #D8DFDA);
 }
 
 :deep(.confirm-button) {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+  background: var(--color-brand, #1B4B3A) !important;
   border: none !important;
   padding: 0.875rem 2.5rem !important;
   font-size: 1.1rem !important;
   font-weight: 600 !important;
-  border-radius: 25px !important;
-  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3) !important;
-  transition: all 0.3s ease !important;
+  border-radius: 8px !important;
+  transition: background-color 0.2s ease !important;
 }
 
 :deep(.confirm-button:hover) {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4) !important;
+  background: var(--color-brand-strong, #123329) !important;
+}
+
+:deep(.confirm-button:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 :deep(.confirm-button:disabled) {
-  background: #6c757d !important;
-  box-shadow: none !important;
-  transform: none !important;
+  background: var(--color-graphite, #5C645F) !important;
 }
 
 /* PrimeVue DatePicker Customization */
 :deep(.p-datepicker) {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(30, 77, 43, 0.1);
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 :deep(.p-datepicker table) {
   font-size: 0.95rem;
   border-collapse: collapse;
+  table-layout: fixed;
   width: 100%;
 }
 
 :deep(.p-datepicker-header) {
-  background: linear-gradient(135deg, #1e4d2b 0%, #2d6b3f 100%);
-  color: white;
+  background: var(--color-brand, #1B4B3A);
+  color: var(--color-paper, #FCFCFA);
   text-align: center;
   padding: 1rem;
   font-weight: 600;
@@ -511,51 +478,56 @@ const handleConfirmReservation = async () => {
   padding: 0.75rem;
   cursor: pointer;
   text-align: center;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
   border-radius: 6px;
   margin: 2px;
 }
 
 :deep(.p-highlight) {
-  background: linear-gradient(135deg, #1e4d2b 0%, #2d6b3f 100%) !important;
-  color: white !important;
-  border-radius: 8px !important;
+  background: var(--color-brand, #1B4B3A) !important;
+  color: var(--color-paper, #FCFCFA) !important;
+  border-radius: 6px !important;
   font-weight: 600 !important;
 }
 
 :deep(.p-datepicker-today > span) {
-  border: 2px solid #1e4d2b !important;
+  border: 2px solid var(--color-brand, #1B4B3A) !important;
   border-radius: 6px !important;
   font-weight: 600 !important;
 }
 
 :deep(.p-datepicker-calendar td:not(.p-disabled):hover) {
-  background: linear-gradient(135deg, #e6f7e6 0%, #d4edda 100%) !important;
+  background: var(--color-brand-soft, #E8F0EC) !important;
   border-radius: 6px !important;
-  transform: scale(1.05);
 }
 
 :deep(.p-datepicker-calendar td.p-disabled) {
-  background-color: #f8f9fa;
-  color: #adb5bd;
+  background-color: var(--color-border, #D8DFDA);
+  color: var(--color-graphite, #5C645F);
   cursor: not-allowed;
   opacity: 0.5;
 }
 
 :deep(.p-datepicker-prev),
 :deep(.p-datepicker-next) {
-  color: white !important;
+  color: var(--color-paper, #FCFCFA) !important;
   background: rgba(255, 255, 255, 0.1) !important;
   border-radius: 50% !important;
   width: 2.5rem !important;
   height: 2.5rem !important;
-  transition: all 0.2s ease !important;
+  transition: background-color 0.2s ease !important;
 }
 
 :deep(.p-datepicker-prev:hover),
 :deep(.p-datepicker-next:hover) {
   background: rgba(255, 255, 255, 0.2) !important;
-  transform: scale(1.1) !important;
+}
+
+:deep(.p-datepicker-prev:focus-visible),
+:deep(.p-datepicker-next:focus-visible),
+:deep(.p-datepicker-calendar td:focus-visible) {
+  outline: 2px solid var(--color-paper, #FCFCFA);
+  outline-offset: 2px;
 }
 
 /* Responsive Design */

@@ -76,7 +76,11 @@ const clearHoveredBrand = () => {
           v-for="brand in popularBrands"
           :key="brand.id"
           class="brand-card"
+          tabindex="0"
+          role="button"
+          :aria-label="t('brandCard.logoAlt', { brand: brand.name })"
           @click="navigateToBrandSearch(brand.searchRoute)"
+          @keydown.enter="navigateToBrandSearch(brand.searchRoute)"
           @mouseenter="setHoveredBrand(brand.id)"
           @mouseleave="clearHoveredBrand"
         >
@@ -158,6 +162,7 @@ const clearHoveredBrand = () => {
   width: 100%;
   padding: 4rem 1rem;
   min-height: 60vh;
+  background-color: var(--color-paper, #FCFCFA);
 }
 
 .container {
@@ -172,19 +177,16 @@ const clearHoveredBrand = () => {
 }
 
 .title {
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
   font-size: 2.5rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, #1e293b, #475569);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .subtitle {
   font-size: 1.125rem;
-  color: #64748b;
+  color: var(--color-graphite, #5C645F);
   max-width: 32rem;
   margin: 0 auto;
   line-height: 1.6;
@@ -200,18 +202,15 @@ const clearHoveredBrand = () => {
 
 .brand-card {
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border: none;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.2s ease;
+  background: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
   border-radius: 1rem;
   overflow: hidden;
 }
 
 .brand-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-brand, #1B4B3A);
 }
 
 .brand-content {
@@ -234,23 +233,14 @@ const clearHoveredBrand = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
+  transition: background 0.2s ease;
   position: relative;
-}
-
-.brand-card:hover .logo-circle {
-  transform: scale(1.1);
 }
 
 .brand-logo {
   width: 5rem;
   height: 5rem;
   object-fit: contain;
-  transition: all 0.3s ease;
-}
-
-.brand-card:hover .brand-logo {
-  transform: scale(1.1);
 }
 
 .decorative-ring {
@@ -258,13 +248,12 @@ const clearHoveredBrand = () => {
   inset: 0;
   border-radius: 50%;
   border: 2px solid transparent;
-  transition: all 0.3s ease;
+  transition: opacity 0.2s ease;
   opacity: 0;
 }
 
 .decorative-ring.active {
   opacity: 1;
-  transform: scale(1.05);
 }
 
 /* Brand Info */
@@ -285,12 +274,11 @@ const clearHoveredBrand = () => {
   justify-content: center;
   gap: 0.5rem;
   font-size: 0.875rem;
-  color: #64748b;
-  transition: color 0.3s ease;
+  color: var(--color-graphite, #5C645F);
 }
 
 .brand-card:hover .search-indicator {
-  color: #475569;
+  color: var(--color-ink, #12211C);
 }
 
 .search-indicator i {
@@ -320,33 +308,26 @@ const clearHoveredBrand = () => {
 }
 
 .home-button {
-  background: rgba(255, 255, 255, 0.8) !important;
-  backdrop-filter: blur(10px);
-  border: 1px solid #e2e8f0 !important;
-  color: #1e293b !important;
+  background: var(--color-paper, #FCFCFA) !important;
+  border: 1px solid var(--color-border, #D8DFDA) !important;
+  color: var(--color-ink, #12211C) !important;
   padding: 0.75rem 1.5rem !important;
   font-size: 1rem !important;
   border-radius: 0.75rem !important;
-  transition: all 0.3s ease !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease !important;
   display: flex !important;
   align-items: center !important;
   gap: 0.5rem !important;
 }
 
 .home-button:hover {
-  background: rgba(255, 255, 255, 0.95) !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
-  transform: translateY(-2px) !important;
+  background: var(--color-brand-soft, #E8F0EC) !important;
+  border-color: var(--color-brand, #1B4B3A) !important;
 }
 
 .home-button i {
   font-size: 1.25rem;
-  transition: transform 0.3s ease;
   transform: rotate(-90deg);
-}
-
-.home-button:hover i {
-  transform: translateY(-3px) rotate(-90deg);
 }
 
 /* Responsive Design */
@@ -536,6 +517,13 @@ const clearHoveredBrand = () => {
   .search-indicator {
     font-size: 0.875rem;
   }
+}
+
+/* Focus styles for keyboard navigation */
+.brand-card:focus-visible,
+:deep(.home-button:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 /* Accessibility improvements */

@@ -99,16 +99,31 @@ onMounted(() => {
       <p>{{ t('carList.empty') }}</p>
     </div>
     <div v-else class="car-grid">
-      <pv-card v-for="car in cars" :key="car.id" class="car-card" @click="navigateToCarDetail(car.id)">
+      <pv-card
+        v-for="car in cars"
+        :key="car.id"
+        class="car-card"
+        tabindex="0"
+        role="link"
+        :aria-label="car.title"
+        @click="navigateToCarDetail(car.id)"
+        @keydown.enter="navigateToCarDetail(car.id)"
+      >
         <template #header>
-          <img :src="getPhotoUrl(car)" :alt="car.model" class="car-image" />
+          <div class="car-image-wrap">
+            <img :src="getPhotoUrl(car)" :alt="car.model" class="car-image" />
+            <verified-seal v-if="car.hasPdfCertification" class="car-seal" size="sm" />
+          </div>
         </template>
         <template #title>
           <div class="car-title">{{ car.title }}</div>
         </template>
         <template #subtitle>
           <div class="car-brand-model">{{ car.brand }} - {{ car.model }}</div>
-          <div class="car-year">{{ t('carList.year') }} {{ car.year }}</div>
+          <div class="car-meta-row">
+            <span class="car-year">{{ t('carList.year') }} {{ car.year }}</span>
+            <span v-if="car.licensePlate" class="car-plate">{{ car.licensePlate }}</span>
+          </div>
         </template>
         <template #content>
           <p class="car-description">{{ car.description ? car.description.substring(0, 100) + '...' : t('carList.noDescription') }}</p>
@@ -128,33 +143,18 @@ onMounted(() => {
   padding: 2rem;
   max-width: 1400px;
   margin: 0 auto;
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  background: var(--color-paper, #FCFCFA);
+  font-family: var(--font-body, 'Inter', sans-serif);
   min-height: calc(100vh - 70px);
 }
 
 .car-list-container h2 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #2c3e50;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 2.25rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   text-align: center;
   margin-bottom: 3rem;
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  position: relative;
-}
-
-.car-list-container h2::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 4px;
-  background: linear-gradient(90deg, #007bff, #0056b3);
-  border-radius: 2px;
 }
 
 .car-grid {
@@ -167,52 +167,42 @@ onMounted(() => {
 
 .car-card {
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 16px;
+  transition: border-color 0.2s ease;
+  border-radius: 12px;
   overflow: hidden;
-  background: white;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
   position: relative;
 }
 
-.car-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #007bff, #0056b3);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
 .car-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-brand, #1B4B3A);
 }
 
-.car-card:hover::before {
-  transform: scaleX(1);
+.car-image-wrap {
+  position: relative;
+}
+
+.car-seal {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
 }
 
 .car-image {
   width: 100%;
   height: 240px;
   object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.car-card:hover .car-image {
-  transform: scale(1.05);
+  display: block;
 }
 
 .car-title {
-  font-size: 1.375rem;
-  font-weight: 700;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
   margin-bottom: 0.75rem;
-  color: #2c3e50;
+  color: var(--color-ink, #12211C);
   line-height: 1.3;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -220,37 +210,44 @@ onMounted(() => {
 }
 
 .car-brand-model {
-  font-size: 1.1rem;
-  color: #007bff;
+  font-size: 1rem;
+  color: var(--color-brand, #1B4B3A);
   margin-bottom: 0.5rem;
   font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
-.car-brand-model::before {
-  content: '';
-  width: 4px;
-  height: 16px;
-  background: linear-gradient(180deg, #007bff, #0056b3);
-  border-radius: 2px;
+.car-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .car-year {
-  font-size: 0.95rem;
-  color: #6c757d;
-  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--color-graphite, #5C645F);
   font-weight: 500;
-  background: rgba(108, 117, 125, 0.1);
-  padding: 0.25rem 0.75rem;
+  background: var(--color-brand-soft, #E8F0EC);
+  padding: 0.2rem 0.65rem;
   border-radius: 12px;
   display: inline-block;
 }
 
+.car-plate {
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 0.8rem;
+  color: var(--color-graphite, #5C645F);
+  background: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  letter-spacing: 0.03em;
+}
+
 .car-description {
   font-size: 0.95rem;
-  color: #495057;
+  color: var(--color-graphite, #5C645F);
   margin-bottom: 1rem;
   min-height: 60px;
   line-height: 1.5;
@@ -261,53 +258,47 @@ onMounted(() => {
 
 .car-owner {
   font-size: 0.875rem;
-  color: #6c757d;
-  font-style: italic;
+  color: var(--color-graphite, #5C645F);
   margin-bottom: 1.25rem;
   padding: 0.5rem 0.75rem;
-  background: rgba(108, 117, 125, 0.05);
+  background: var(--color-brand-soft, #E8F0EC);
   border-radius: 8px;
-  border-left: 3px solid #007bff;
 }
 
 .car-price {
-  font-size: 1.375rem;
-  font-weight: 800;
-  color: #28a745;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-ink, #12211C);
   margin-bottom: 0.75rem;
-  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
   display: inline-block;
-  border: 1px solid rgba(40, 167, 69, 0.2);
 }
 
 /* Loading and Error States */
 .car-list-container .p-d-flex {
-  background: white;
+  background: var(--color-paper, #FCFCFA);
   padding: 3rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  border: 1px solid var(--color-border, #D8DFDA);
   margin: 2rem 0;
 }
 
 .car-list-container .p-error {
-  background: #f8d7da;
-  color: #721c24;
+  background: #fdf2f2;
+  color: #7a1f1f;
   padding: 2rem;
   border-radius: 12px;
-  border: 1px solid #f5c6cb;
+  border: 1px solid #f0caca;
   margin: 2rem 0;
 }
 
 .car-list-container .p-text-center {
-  background: white;
+  background: var(--color-paper, #FCFCFA);
   padding: 3rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  border: 1px solid var(--color-border, #D8DFDA);
   margin: 2rem 0;
   font-size: 1.2rem;
-  color: #6c757d;
+  color: var(--color-graphite, #5C645F);
 }
 
 /* PrimeVue Card Customization */
@@ -342,16 +333,24 @@ onMounted(() => {
   padding: 0.625rem 1.25rem !important;
   font-size: 0.875rem !important;
   font-weight: 600 !important;
-  border-radius: 20px !important;
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+  border-radius: 8px !important;
+  background: var(--color-brand, #1B4B3A) !important;
   border: none !important;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3) !important;
-  transition: all 0.3s ease !important;
+  transition: background-color 0.2s ease !important;
 }
 
 :deep(.p-button-sm:hover) {
-  transform: translateY(-1px) !important;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4) !important;
+  background: var(--color-brand-strong, #123329) !important;
+}
+
+:deep(.p-button-sm:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
+}
+
+.car-card:focus-visible {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 /* Responsive Design */

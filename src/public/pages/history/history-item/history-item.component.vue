@@ -51,7 +51,7 @@ const handleImageError = (event) => {
     <template #content>
       <div class="reservation-details">
         <p><strong>{{ t('historyItem.dateTime') }}</strong> {{ formatDateTime(reservation.inspectionDateTime) }}</p>
-        <p><strong>{{ t('historyItem.price') }}</strong> S/ {{ reservation.price || t('historyItem.priceNotSpecified') }}</p>
+        <p><strong>{{ t('historyItem.price') }}</strong> <span class="price-value">S/ {{ reservation.price || t('historyItem.priceNotSpecified') }}</span></p>
         <p><strong>{{ t('historyItem.status') }}</strong> <span :class="`status-${reservation.status?.toLowerCase()}`">{{ reservation.status || t('historyItem.statusNotSpecified') }}</span></p>
       </div>
     </template>
@@ -59,50 +59,31 @@ const handleImageError = (event) => {
 </template>
 
 <style scoped>
+.history-item-card,
+.history-item-card * {
+  box-sizing: border-box;
+}
+
 .history-item-card {
   width: 100%;
   max-width: 400px;
   margin: 0 auto 1.5rem;
-  background: white;
-  border-radius: 16px;
+  background: var(--color-paper, #FCFCFA);
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-.history-item-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #1e4d2b, #2d6b3f);
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
+  border: 1px solid var(--color-border, #D8DFDA);
+  transition: box-shadow 0.2s ease;
 }
 
 .history-item-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-}
-
-.history-item-card:hover::before {
-  transform: scaleX(1);
+  box-shadow: 0 8px 24px rgba(18, 33, 28, 0.1);
 }
 
 .vehicle-image {
   width: 100%;
   height: 220px;
   object-fit: cover;
-  transition: transform 0.3s ease;
-  background: #f8f9fa;
-}
-
-.history-item-card:hover .vehicle-image {
-  transform: scale(1.05);
+  background: var(--color-brand-soft, #E8F0EC);
 }
 
 :deep(.p-card-body) {
@@ -122,45 +103,42 @@ const handleImageError = (event) => {
 }
 
 .card-title {
-  font-size: 1.375rem;
-  font-weight: 700;
-  color: #2c3e50;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   margin-bottom: 0.5rem;
   line-height: 1.3;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .card-subtitle {
-  font-size: 1.1rem;
-  color: #1e4d2b;
+  font-size: 1rem;
+  color: var(--color-brand, #1B4B3A);
   font-weight: 600;
   margin-bottom: 1rem;
-  padding: 0.5rem 1rem;
-  background: rgba(30, 77, 43, 0.1);
+  padding: 0.4rem 0.9rem;
+  background: var(--color-brand-soft, #E8F0EC);
   border-radius: 20px;
   display: inline-block;
-  border-left: 3px solid #1e4d2b;
 }
 
 .reservation-details {
-  background: rgba(0, 0, 0, 0.02);
+  background: var(--color-brand-soft, #E8F0EC);
   padding: 1.25rem;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .reservation-details p {
   font-size: 0.95rem;
   margin-bottom: 0.875rem;
-  color: #495057;
+  color: var(--color-graphite, #5C645F);
   line-height: 1.5;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--color-border, #D8DFDA);
 }
 
 .reservation-details p:last-child {
@@ -169,52 +147,46 @@ const handleImageError = (event) => {
 }
 
 .reservation-details strong {
-  color: #2c3e50;
+  color: var(--color-ink, #12211C);
   font-weight: 600;
   min-width: 100px;
 }
 
+.price-value {
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+}
+
 /* Status Styles */
-.status-confirmada {
-  color: #28a745;
+.status-confirmada,
+.status-completada {
+  color: var(--color-brand, #1B4B3A);
   font-weight: 700;
-  background: rgba(40, 167, 69, 0.1);
+  background: var(--color-brand-soft, #E8F0EC);
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .status-pendiente {
-  color: #ffc107;
+  color: var(--color-verified, #B08D3E);
   font-weight: 700;
-  background: rgba(255, 193, 7, 0.1);
+  background: var(--color-verified-soft, #F5EDDC);
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .status-cancelada {
-  color: #dc3545;
+  color: #a02525;
   font-weight: 700;
-  background: rgba(220, 53, 69, 0.1);
+  background: #fdf2f2;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.status-completada {
-  color: #007bff;
-  font-weight: 700;
-  background: rgba(0, 123, 255, 0.1);
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }

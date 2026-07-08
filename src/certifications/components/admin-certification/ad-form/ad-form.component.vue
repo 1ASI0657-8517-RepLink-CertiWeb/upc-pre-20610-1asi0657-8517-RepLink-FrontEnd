@@ -29,7 +29,7 @@ const formData = ref({
 watch(() => props.initialData, (newData) => {
   if (newData) {
     formData.value.owner = newData.reservationName || '';
-    formData.value.ownerEmail = newData.reservationEmail || ''; 
+    formData.value.ownerEmail = newData.reservationEmail || '';
     formData.value.brand = newData.brand || '';
     formData.value.model = newData.model || '';
     formData.value.imageUrl = newData.imageUrl || '';
@@ -168,7 +168,7 @@ const formProgress = computed(() => {
             <pv-inputText
               id="ownerEmail"
               v-model="formData.ownerEmail"
-              class="form-input readonly-input" 
+              class="form-input readonly-input"
               :placeholder="t('adForm.ownerEmailPlaceholder')"
               readonly
             />
@@ -252,6 +252,29 @@ const formProgress = computed(() => {
           </div>
         </div>
 
+        <!-- Placa (dato técnico de solo lectura, heredado de la reserva aceptada) -->
+        <div class="field-group">
+          <div class="field-header">
+            <label for="licensePlate" class="field-label">
+              <i class="pi pi-id-card label-icon"></i>
+              {{ t('adForm.licensePlate') }}
+            </label>
+            <span class="field-badge readonly">{{ t('adForm.autoCompleted') }}</span>
+          </div>
+          <div class="input-wrapper">
+            <pv-inputText
+              id="licensePlate"
+              v-model="formData.licensePlate"
+              class="form-input readonly-input plate-input"
+              :placeholder="t('adForm.licensePlatePlaceholder')"
+              readonly
+            />
+            <div class="readonly-indicator">
+              <i class="pi pi-lock"></i>
+            </div>
+          </div>
+        </div>
+
         <!-- Descripción -->
         <div class="field-group full-width">
           <div class="field-header">
@@ -292,8 +315,8 @@ const formProgress = computed(() => {
             </span>
             <span class="status-description">
               {{ isFormValid
-                ? t('adForm.allFieldsCompleted') 
-                : t('adForm.completeEditableFields') 
+                ? t('adForm.allFieldsCompleted')
+                : t('adForm.completeEditableFields')
               }}
             </span>
           </div>
@@ -304,74 +327,70 @@ const formProgress = computed(() => {
 </template>
 
 <style scoped>
-/* Container Styles */
 .form-container {
+  box-sizing: border-box;
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  min-height: 100vh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--color-paper, #FCFCFA);
+  font-family: var(--font-body, 'Inter', sans-serif);
 }
 
 /* Header Styles */
 .form-header {
-  background: white;
-  border-radius: 20px;
-  padding: 2.5rem;
+  background: var(--color-paper, #FCFCFA);
+  border-radius: 12px;
+  padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .header-content {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.25rem;
   margin-bottom: 2rem;
 }
 
 .header-icon {
-  width: 4rem;
-  height: 4rem;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  border-radius: 16px;
+  width: 3.5rem;
+  height: 3.5rem;
+  background: var(--color-brand, #1B4B3A);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 1.75rem;
-  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+  color: var(--color-paper, #FCFCFA);
+  font-size: 1.5rem;
+  flex-shrink: 0;
 }
 
 .header-text {
   flex: 1;
+  min-width: 0;
 }
 
 .main-title {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #1e293b;
-  margin: 0 0 0.5rem 0;
-  background: linear-gradient(135deg, #1e293b, #3b82f6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
+  margin: 0 0 0.4rem 0;
 }
 
 .subtitle {
-  font-size: 1.1rem;
-  color: #64748b;
+  font-size: 1rem;
+  color: var(--color-graphite, #5C645F);
   margin: 0;
   font-weight: 500;
 }
 
 /* Progress Section */
 .progress-section {
-  background: #f8fafc;
-  border-radius: 12px;
-  padding: 1.5rem;
-  border: 1px solid #e2e8f0;
+  background: var(--color-brand-soft, #E8F0EC);
+  border-radius: 10px;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .progress-info {
@@ -383,66 +402,66 @@ const formProgress = computed(() => {
 
 .progress-label {
   font-weight: 600;
-  color: #475569;
+  color: var(--color-ink, #12211C);
   font-size: 0.9rem;
 }
 
 .progress-percentage {
   font-weight: 700;
-  color: #3b82f6;
+  color: var(--color-brand, #1B4B3A);
   font-size: 1rem;
 }
 
 .progress-bar {
   width: 100%;
   height: 8px;
-  background: #e2e8f0;
+  background: var(--color-border, #D8DFDA);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  background: var(--color-brand, #1B4B3A);
   border-radius: 4px;
-  transition: width 0.5s ease;
+  transition: width 0.4s ease;
 }
 
 /* Form Content */
 .form-content {
-  background: white;
-  border-radius: 20px;
-  padding: 2.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e2e8f0;
+  background: var(--color-paper, #FCFCFA);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .section-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 2.5rem;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #f1f5f9;
+  border-bottom: 2px solid var(--color-brand, #1B4B3A);
 }
 
 .section-icon {
-  color: #3b82f6;
-  font-size: 1.5rem;
+  color: var(--color-brand, #1B4B3A);
+  font-size: 1.3rem;
 }
 
 .section-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   margin: 0;
 }
 
 /* Form Grid */
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.75rem;
 }
 
 .field-group {
@@ -459,7 +478,8 @@ const formProgress = computed(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 
 .field-label {
@@ -467,34 +487,35 @@ const formProgress = computed(() => {
   align-items: center;
   gap: 0.5rem;
   font-weight: 600;
-  color: #374151;
-  font-size: 0.95rem;
+  color: var(--color-ink, #12211C);
+  font-size: 0.9rem;
 }
 
 .label-icon {
-  color: #3b82f6;
+  color: var(--color-brand, #1B4B3A);
   font-size: 0.9rem;
 }
 
 .field-badge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
 }
 
 .field-badge.editable {
-  background: #fef3c7;
-  color: #d97706;
-  border: 1px solid #fbbf24;
+  background: var(--color-brand-soft, #E8F0EC);
+  color: var(--color-brand, #1B4B3A);
+  border: 1px solid var(--color-brand, #1B4B3A);
 }
 
 .field-badge.readonly {
-  background: #f3f4f6;
-  color: #6b7280;
-  border: 1px solid #d1d5db;
+  background: var(--color-paper, #FCFCFA);
+  color: var(--color-graphite, #5C645F);
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 /* Input Wrapper */
@@ -507,8 +528,8 @@ const formProgress = computed(() => {
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #9ca3af;
-  font-size: 0.9rem;
+  color: var(--color-graphite, #5C645F);
+  font-size: 0.85rem;
   pointer-events: none;
 }
 
@@ -517,12 +538,12 @@ const formProgress = computed(() => {
   align-items: center;
   gap: 0.5rem;
   margin-top: 0.5rem;
-  font-size: 0.85rem;
-  color: #6b7280;
+  font-size: 0.8rem;
+  color: var(--color-graphite, #5C645F);
 }
 
 .input-hint i {
-  color: #3b82f6;
+  color: var(--color-brand, #1B4B3A);
 }
 
 .textarea-counter {
@@ -530,26 +551,26 @@ const formProgress = computed(() => {
   bottom: 0.75rem;
   right: 1rem;
   font-size: 0.75rem;
-  color: #9ca3af;
-  background: white;
-  padding: 0.25rem 0.5rem;
+  color: var(--color-graphite, #5C645F);
+  background: var(--color-paper, #FCFCFA);
+  padding: 0.2rem 0.5rem;
   border-radius: 4px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 /* Form Status */
 .form-status {
-  margin-top: 2.5rem;
-  padding: 1.5rem;
-  border-radius: 12px;
-  border: 2px solid #fbbf24;
-  background: #fef3c7;
-  transition: all 0.3s ease;
+  margin-top: 2rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 10px;
+  border: 2px solid var(--color-verified, #B08D3E);
+  background: var(--color-verified-soft, #F5EDDC);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .form-status.valid {
-  border-color: #10b981;
-  background: #d1fae5;
+  border-color: var(--color-brand, #1B4B3A);
+  background: var(--color-brand-soft, #E8F0EC);
 }
 
 .status-content {
@@ -559,93 +580,90 @@ const formProgress = computed(() => {
 }
 
 .status-icon {
-  font-size: 1.5rem;
-  color: #d97706;
+  font-size: 1.4rem;
+  color: var(--color-verified, #B08D3E);
 }
 
 .form-status.valid .status-icon {
-  color: #10b981;
+  color: var(--color-brand, #1B4B3A);
 }
 
 .status-text {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.2rem;
 }
 
 .status-title {
   font-weight: 600;
-  color: #92400e;
+  color: var(--color-ink, #12211C);
   font-size: 1rem;
 }
 
-.form-status.valid .status-title {
-  color: #065f46;
-}
-
 .status-description {
-  font-size: 0.9rem;
-  color: #a16207;
-}
-
-.form-status.valid .status-description {
-  color: #047857;
+  font-size: 0.88rem;
+  color: var(--color-graphite, #5C645F);
 }
 
 /* PrimeVue Component Overrides */
 :deep(.form-input) {
   width: 100%;
-  padding: 1rem 1.25rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid var(--color-border, #D8DFDA);
+  border-radius: 8px;
   font-size: 1rem;
-  transition: all 0.3s ease;
-  background: white;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: var(--color-paper, #FCFCFA);
+  color: var(--color-ink, #12211C);
 }
 
 :deep(.form-input:focus) {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: var(--color-brand, #1B4B3A);
+  box-shadow: 0 0 0 3px var(--color-brand-soft, #E8F0EC);
 }
 
-:deep(.editable-input) {
-  background: #fffbeb !important;
-  border-color: #fbbf24;
-}
-
-:deep(.editable-input:focus) {
-  background: white !important;
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+:deep(.form-input:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 :deep(.readonly-input) {
-  background: #f9fafb !important;
-  color: #6b7280 !important;
+  background: #F1F2EF;
+  color: var(--color-graphite, #5C645F);
   cursor: not-allowed;
-  border-color: #d1d5db;
+}
+
+:deep(.plate-input.p-inputtext) {
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  letter-spacing: 0.06em;
 }
 
 :deep(.form-textarea) {
   width: 100%;
-  padding: 1rem 1.25rem;
-  border: 2px solid #fbbf24;
-  border-radius: 12px;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid var(--color-border, #D8DFDA);
+  border-radius: 8px;
   font-size: 1rem;
-  transition: all 0.3s ease;
-  background: #fffbeb;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: var(--color-paper, #FCFCFA);
+  color: var(--color-ink, #12211C);
   resize: vertical;
   min-height: 120px;
-  font-family: inherit;
   line-height: 1.5;
 }
 
 :deep(.form-textarea:focus) {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  background: white;
+  border-color: var(--color-brand, #1B4B3A);
+  box-shadow: 0 0 0 3px var(--color-brand-soft, #E8F0EC);
+}
+
+:deep(.form-textarea:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 /* Responsive Design */
@@ -653,31 +671,31 @@ const formProgress = computed(() => {
   .form-container {
     padding: 1rem;
   }
-  
+
   .form-header,
   .form-content {
     padding: 1.5rem;
   }
-  
+
   .header-content {
     flex-direction: column;
     text-align: center;
     gap: 1rem;
   }
-  
+
   .main-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
-  
+
   .form-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.25rem;
   }
-  
+
   .field-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
 }
 </style>

@@ -191,80 +191,53 @@ const goToRegister = () => {
 </template>
 
 <style scoped>
+.login-wrapper,
+.login-wrapper * {
+  box-sizing: border-box;
+}
+
 .login-wrapper {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f0e1 0%, #ede4d1 100%);
+  background: var(--color-brand-soft, #E8F0EC);
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem 1rem;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  position: relative;
-}
-
-.login-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-  pointer-events: none;
+  font-family: var(--font-body, 'Inter', sans-serif);
 }
 
 .login-container {
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
 }
 
 :deep(.login-card) {
-  border-radius: 20px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  background-color: #ffffff;
-  border: none;
-  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(18, 33, 28, 0.12);
+  background-color: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 :deep(.login-card .p-card-header) {
-  background: linear-gradient(135deg, #1e4d2b 0%, #2d6b3f 100%);
+  background: var(--color-brand, #1B4B3A);
   padding: 3rem 2rem;
   text-align: center;
-  position: relative;
-}
-
-:deep(.login-card .p-card-header::before) {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
-  pointer-events: none;
-}
-
-.card-header {
-  position: relative;
-  z-index: 1;
 }
 
 .card-header .title {
-  color: white;
-  font-size: 2.5rem;
-  font-weight: 800;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  color: var(--color-paper, #FCFCFA);
+  font-size: 2.25rem;
+  font-weight: 600;
   margin-bottom: 0.75rem;
-  letter-spacing: -0.025em;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.01em;
 }
 
 .card-header .subtitle {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.125rem;
+  color: rgba(252, 252, 250, 0.85);
+  font-size: 1.05rem;
   font-weight: 400;
   line-height: 1.5;
 }
@@ -285,32 +258,34 @@ const goToRegister = () => {
   display: block;
   margin-bottom: 0.75rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-ink, #12211C);
   font-size: 0.95rem;
-  letter-spacing: 0.025em;
 }
 
 :deep(.p-inputtext) {
   width: 100%;
   padding: 1rem 1.25rem;
-  border-radius: 12px;
-  border: 2px solid #e5e7eb;
-  background-color: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid var(--color-border, #D8DFDA);
+  background-color: var(--color-paper, #FCFCFA);
   font-size: 1rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 :deep(.p-inputtext:hover) {
-  border-color: #d1d5db;
-  background-color: #ffffff;
+  border-color: var(--color-graphite, #5C645F);
 }
 
 :deep(.p-inputtext:focus) {
-  border-color: #1e4d2b;
-  box-shadow: 0 0 0 3px rgba(30, 77, 43, 0.1);
-  background-color: #ffffff;
+  border-color: var(--color-brand, #1B4B3A);
+  box-shadow: 0 0 0 3px var(--color-brand-soft, #E8F0EC);
   outline: none;
+}
+
+:deep(.p-inputtext:focus-visible),
+:deep(.p-password input:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 :deep(.p-password) {
@@ -322,13 +297,20 @@ const goToRegister = () => {
 }
 
 :deep(.p-input-icon-left) {
+  position: relative;
   width: 100%;
+  display: block;
 }
 
 :deep(.p-input-icon-left i) {
-  color: #6b7280;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-graphite, #5C645F);
   left: 1rem;
   font-size: 1.1rem;
+  pointer-events: none;
+  z-index: 1;
 }
 
 :deep(.p-input-icon-left input) {
@@ -356,24 +338,29 @@ const goToRegister = () => {
 
 .remember-label {
   font-size: 0.9rem;
-  color: #374151;
+  color: var(--color-ink, #12211C);
   cursor: pointer;
   font-weight: 500;
 }
 
 .forgot-password {
   font-size: 0.9rem;
-  color: #1e4d2b;
+  color: var(--color-brand, #1B4B3A);
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
   font-weight: 500;
   padding: 0.25rem 0.5rem;
   border-radius: 6px;
 }
 
 .forgot-password:hover {
-  color: #2d6b3f;
-  background-color: rgba(30, 77, 43, 0.05);
+  background-color: var(--color-brand-soft, #E8F0EC);
+}
+
+.forgot-password:focus-visible,
+:deep(.remember-checkbox:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 /* Messages */
@@ -407,27 +394,23 @@ const goToRegister = () => {
 
 :deep(.login-button) {
   width: 100%;
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 1rem 1.5rem;
   font-weight: 700;
   font-size: 1.05rem;
-  background: linear-gradient(135deg, #1e4d2b 0%, #2d6b3f 100%);
-  border-color: transparent;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(30, 77, 43, 0.3);
-  letter-spacing: 0.025em;
+  background: var(--color-brand, #1B4B3A);
+  border-color: var(--color-brand, #1B4B3A);
+  transition: background-color 0.2s ease;
 }
 
 :deep(.login-button:hover) {
-  background: linear-gradient(135deg, #2d6b3f 0%, #1e4d2b 100%);
-  border-color: transparent;
-  box-shadow: 0 8px 20px rgba(30, 77, 43, 0.4);
-  transform: translateY(-2px);
+  background: var(--color-brand-strong, #123329);
+  border-color: var(--color-brand-strong, #123329);
 }
 
-:deep(.login-button:active) {
-  transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(30, 77, 43, 0.3);
+:deep(.login-button:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 .register-prompt {
@@ -440,23 +423,27 @@ const goToRegister = () => {
 }
 
 .register-prompt p {
-  color: #6b7280;
+  color: var(--color-graphite, #5C645F);
   margin: 0;
   font-weight: 500;
 }
 
 :deep(.register-link) {
-  color: #1e4d2b;
+  color: var(--color-brand, #1B4B3A);
   font-weight: 700;
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 :deep(.register-link:hover) {
-  background-color: rgba(30, 77, 43, 0.1);
-  color: #1e4d2b;
-  transform: translateY(-1px);
+  background-color: var(--color-brand-soft, #E8F0EC);
+}
+
+:deep(.register-link:focus-visible),
+:deep(.login-card .p-button:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 /* Responsive Design */

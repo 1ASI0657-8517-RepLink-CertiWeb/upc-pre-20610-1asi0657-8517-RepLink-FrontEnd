@@ -52,7 +52,7 @@ const navigateToCertification = () => {
 <style scoped>
 .certification-banner {
   width: 100%;
-  background-color: #f5f0e1;
+  background-color: var(--color-brand-soft, #E8F0EC);
   padding: 1.5rem 1rem;
   overflow: hidden;
 }
@@ -80,12 +80,7 @@ const navigateToCertification = () => {
   height: auto;
   object-fit: contain;
   border-radius: 8px;
-  transition: transform 0.3s ease;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
-
-.car-image:hover {
-  transform: scale(1.02);
 }
 
 .certification-content {
@@ -98,16 +93,17 @@ const navigateToCertification = () => {
 }
 
 .certification-title {
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
   font-size: 1.75rem;
-  font-weight: 700;
-  color: #1b4332;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   margin: 0;
   line-height: 1.2;
 }
 
 .certification-description {
   font-size: 1rem;
-  color: #495057;
+  color: var(--color-graphite, #5C645F);
   margin: 0;
   line-height: 1.5;
 }
@@ -119,40 +115,24 @@ const navigateToCertification = () => {
 }
 
 :deep(.certification-button) {
-  background-color: #f9f871;
+  background-color: var(--color-brand, #1B4B3A);
   border: none;
-  color: #1b4332;
+  color: white;
   font-weight: 600;
   font-size: 1rem;
   padding: 0.75rem 1.25rem;
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 300px;
   justify-content: center;
 }
 
 :deep(.certification-button:hover) {
-  background-color: #f5f38e;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-}
-
-:deep(.certification-button:active) {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.button-icon {
-  transition: transform 0.2s ease;
-}
-
-:deep(.certification-button:hover) .button-icon {
-  transform: translateX(4px);
+  background-color: var(--color-brand-strong, #123329);
 }
 
 /* Responsive adjustments */
@@ -230,6 +210,12 @@ const navigateToCertification = () => {
   .car-image {
     max-width: 600px;
   }
+}
+
+/* Focus styles for keyboard navigation */
+:deep(.certification-button:focus-visible) {
+  outline: 2px solid var(--color-brand-strong, #123329);
+  outline-offset: 2px;
 }
 
 /* Accessibility improvements */

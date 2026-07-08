@@ -164,7 +164,7 @@ const goToLogin = () => {
           
           <template #content>
             <div class="steps-container">
-              <pv-steps :model="items" :activeIndex="currentStep" class="custom-steps" :readonly="true"/>
+              <pv-steps :model="items" :activeStep="currentStep" class="custom-steps" :readonly="true"/>
             </div>
             
             <form @submit.prevent="currentStep === 2 ? handleRegistration() : nextStep()">
@@ -201,11 +201,16 @@ const goToLogin = () => {
               <div v-if="currentStep === 1" class="step-content">
                 <h2 class="step-title">{{ t('registerPage.steps.selectPlan') }}</h2>
                 
-                <div class="plans-container">
-                  <div 
-                    class="plan-card" 
+                <div class="plans-container" role="radiogroup" :aria-label="t('registerPage.steps.selectPlan')">
+                  <div
+                    class="plan-card"
                     :class="{ 'selected': selectedPlan === 'Free' }"
+                    role="radio"
+                    :aria-checked="selectedPlan === 'Free'"
+                    tabindex="0"
                     @click="selectedPlan = 'Free'"
+                    @keydown.enter="selectedPlan = 'Free'"
+                    @keydown.space.prevent="selectedPlan = 'Free'"
                   >
                     <div class="plan-header">
                       <i class="pi pi-users plan-icon"></i>
@@ -221,11 +226,16 @@ const goToLogin = () => {
                       </ul>
                     </div>
                   </div>
-                  
-                  <div 
-                    class="plan-card" 
+
+                  <div
+                    class="plan-card"
                     :class="{ 'selected': selectedPlan === 'Mensual' }"
+                    role="radio"
+                    :aria-checked="selectedPlan === 'Mensual'"
+                    tabindex="0"
                     @click="selectedPlan = 'Mensual'"
+                    @keydown.enter="selectedPlan = 'Mensual'"
+                    @keydown.space.prevent="selectedPlan = 'Mensual'"
                   >
                     <div class="plan-header">
                       <i class="pi pi-calendar plan-icon"></i>
@@ -240,11 +250,16 @@ const goToLogin = () => {
                       </ul>
                     </div>
                   </div>
-                  
-                  <div 
-                    class="plan-card" 
+
+                  <div
+                    class="plan-card"
                     :class="{ 'selected': selectedPlan === 'Anual' }"
+                    role="radio"
+                    :aria-checked="selectedPlan === 'Anual'"
+                    tabindex="0"
                     @click="selectedPlan = 'Anual'"
+                    @keydown.enter="selectedPlan = 'Anual'"
+                    @keydown.space.prevent="selectedPlan = 'Anual'"
                   >
                     <div class="plan-badge">{{ t('registerPage.recommended') }}</div>
                     <div class="plan-header">
@@ -361,80 +376,53 @@ const goToLogin = () => {
 </template>
   
 <style scoped>
+.register-wrapper,
+.register-wrapper * {
+  box-sizing: border-box;
+}
+
 .register-wrapper {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f0e1 0%, #ede4d1 100%);
+  background: var(--color-brand-soft, #E8F0EC);
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem 1rem;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  position: relative;
-}
-
-.register-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-  pointer-events: none;
+  font-family: var(--font-body, 'Inter', sans-serif);
 }
 
 .register-container {
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
 }
 
 :deep(.register-card) {
-  border-radius: 20px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  background-color: #ffffff;
-  border: none;
-  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(18, 33, 28, 0.12);
+  background-color: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 :deep(.register-card .p-card-header) {
-  background: linear-gradient(135deg, #1e4d2b 0%, #2d6b3f 100%);
+  background: var(--color-brand, #1B4B3A);
   padding: 3rem 2rem;
   text-align: center;
-  position: relative;
-}
-
-:deep(.register-card .p-card-header::before) {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
-  pointer-events: none;
-}
-
-.card-header {
-  position: relative;
-  z-index: 1;
 }
 
 .card-header .title {
-  color: white;
-  font-size: 2.5rem;
-  font-weight: 800;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  color: var(--color-paper, #FCFCFA);
+  font-size: 2.25rem;
+  font-weight: 600;
   margin-bottom: 0.75rem;
-  letter-spacing: -0.025em;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.01em;
 }
 
 .card-header .subtitle {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.125rem;
+  color: rgba(252, 252, 250, 0.85);
+  font-size: 1.05rem;
   font-weight: 400;
   line-height: 1.5;
 }
@@ -445,8 +433,8 @@ const goToLogin = () => {
 
 .steps-container {
   padding: 2rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--color-brand-soft, #E8F0EC);
+  border-bottom: 1px solid var(--color-border, #D8DFDA);
 }
 
 :deep(.custom-steps) {
@@ -457,79 +445,60 @@ const goToLogin = () => {
   flex: 1;
 }
 
-:deep(.custom-steps .p-steps-item .p-menuitem-link) {
+:deep(.custom-steps .p-steps-item-link) {
   background: transparent;
 }
 
-:deep(.custom-steps .p-steps-item .p-steps-number) {
-  background-color: #e2e8f0;
-  color: #64748b;
+:deep(.custom-steps .p-steps-item-number) {
+  background-color: var(--color-paper, #FCFCFA);
+  color: var(--color-graphite, #5C645F);
   border-radius: 50%;
   width: 3rem;
   height: 3rem;
   font-size: 1.1rem;
   font-weight: 700;
-  border: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid var(--color-border, #D8DFDA);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-:deep(.custom-steps .p-steps-item.p-highlight .p-steps-number) {
-  background: linear-gradient(135deg, #1e4d2b 0%, #2d6b3f 100%);
-  color: white;
-  box-shadow: 0 4px 16px rgba(30, 77, 43, 0.4);
-  transform: scale(1.1);
+:deep(.custom-steps .p-steps-item-active .p-steps-item-number) {
+  background: var(--color-brand, #1B4B3A);
+  color: var(--color-paper, #FCFCFA);
+  border-color: var(--color-brand, #1B4B3A);
 }
 
-:deep(.custom-steps .p-steps-item .p-steps-title) {
-  color: #64748b;
+:deep(.custom-steps .p-steps-item-label) {
+  color: var(--color-graphite, #5C645F);
   font-weight: 500;
   margin-top: 1rem;
   font-size: 0.9rem;
 }
 
-:deep(.custom-steps .p-steps-item.p-highlight .p-steps-title) {
-  color: #1e293b;
+:deep(.custom-steps .p-steps-item-active .p-steps-item-label) {
+  color: var(--color-ink, #12211C);
   font-weight: 700;
+}
+
+:deep(.custom-steps .p-steps-item-link:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 /* Steps Content */
 .step-content {
   padding: 2.5rem;
-  animation: fadeIn 0.5s ease;
   min-height: 400px;
 }
 
-@keyframes fadeIn {
-  from { 
-    opacity: 0; 
-    transform: translateY(20px);
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0);
-  }
-}
-
 .step-title {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   margin-bottom: 2rem;
   text-align: center;
-  position: relative;
-}
-
-.step-title::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
-  background: linear-gradient(90deg, #1e4d2b, #2d6b3f);
-  border-radius: 2px;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--color-brand, #1B4B3A);
 }
 
 /* Form Fields */
@@ -541,32 +510,34 @@ const goToLogin = () => {
   display: block;
   margin-bottom: 0.75rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-ink, #12211C);
   font-size: 0.95rem;
-  letter-spacing: 0.025em;
 }
 
 :deep(.p-inputtext) {
   width: 100%;
   padding: 1rem 1.25rem;
-  border-radius: 12px;
-  border: 2px solid #e5e7eb;
-  background-color: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid var(--color-border, #D8DFDA);
+  background-color: var(--color-paper, #FCFCFA);
   font-size: 1rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 :deep(.p-inputtext:hover) {
-  border-color: #d1d5db;
-  background-color: #ffffff;
+  border-color: var(--color-graphite, #5C645F);
 }
 
 :deep(.p-inputtext:focus) {
-  border-color: #1e4d2b;
-  box-shadow: 0 0 0 3px rgba(30, 77, 43, 0.1);
-  background-color: #ffffff;
+  border-color: var(--color-brand, #1B4B3A);
+  box-shadow: 0 0 0 3px var(--color-brand-soft, #E8F0EC);
   outline: none;
+}
+
+:deep(.p-inputtext:focus-visible),
+:deep(.p-password input:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 :deep(.p-password) {
@@ -578,13 +549,20 @@ const goToLogin = () => {
 }
 
 :deep(.p-input-icon-left) {
+  position: relative;
   width: 100%;
+  display: block;
 }
 
 :deep(.p-input-icon-left i) {
-  color: #6b7280;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-graphite, #5C645F);
   left: 1rem;
   font-size: 1.1rem;
+  pointer-events: none;
+  z-index: 1;
 }
 
 :deep(.p-input-icon-left input) {
@@ -600,40 +578,41 @@ const goToLogin = () => {
 }
 
 .plan-card {
-  border: 3px solid #e2e8f0;
-  border-radius: 16px;
+  border: 2px solid var(--color-border, #D8DFDA);
+  border-radius: 12px;
   padding: 2rem;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
   position: relative;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background: var(--color-paper, #FCFCFA);
 }
 
 .plan-card:hover {
-  border-color: #cbd5e1;
-  transform: translateY(-8px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-brand, #1B4B3A);
+  box-shadow: 0 4px 16px rgba(18, 33, 28, 0.08);
+}
+
+.plan-card:focus-visible {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 .plan-card.selected {
-  border-color: #1e4d2b;
-  background: linear-gradient(135deg, #f0f9f4 0%, #e6f7e6 100%);
-  box-shadow: 0 12px 32px rgba(30, 77, 43, 0.25);
-  transform: translateY(-8px);
+  border-color: var(--color-brand, #1B4B3A);
+  background: var(--color-brand-soft, #E8F0EC);
+  box-shadow: 0 4px 16px rgba(18, 33, 28, 0.1);
 }
 
 .plan-badge {
   position: absolute;
   top: -12px;
   right: 24px;
-  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
-  color: white;
-  padding: 0.5rem 1rem;
+  background: var(--color-verified, #B08D3E);
+  color: var(--color-paper, #FCFCFA);
+  padding: 0.4rem 1rem;
   border-radius: 20px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -647,20 +626,16 @@ const goToLogin = () => {
 }
 
 .plan-icon {
-  font-size: 2.5rem;
-  color: #1e4d2b;
+  font-size: 2.25rem;
+  color: var(--color-brand, #1B4B3A);
   margin-bottom: 1rem;
-  transition: transform 0.3s ease;
-}
-
-.plan-card:hover .plan-icon {
-  transform: scale(1.1);
 }
 
 .plan-header h3 {
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
   font-size: 1.375rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   margin: 0;
 }
 
@@ -669,26 +644,28 @@ const goToLogin = () => {
 }
 
 .plan-price {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #1e293b;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   margin-bottom: 0.75rem;
   line-height: 1;
 }
 
 .plan-price span {
-  font-size: 1rem;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.95rem;
   font-weight: 500;
-  color: #64748b;
+  color: var(--color-graphite, #5C645F);
 }
 
 .plan-saving {
-  color: #16a34a;
+  color: var(--color-brand, #1B4B3A);
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.9rem;
   margin-bottom: 1.5rem;
-  background: rgba(22, 163, 74, 0.1);
-  padding: 0.5rem 1rem;
+  background: var(--color-brand-soft, #E8F0EC);
+  padding: 0.4rem 1rem;
   border-radius: 20px;
   display: inline-block;
 }
@@ -704,7 +681,7 @@ const goToLogin = () => {
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
-  color: #475569;
+  color: var(--color-graphite, #5C645F);
   font-weight: 500;
 }
 
@@ -716,24 +693,24 @@ const goToLogin = () => {
 }
 
 .plan-features li i.pi-check {
-  color: #16a34a;
+  color: var(--color-brand, #1B4B3A);
 }
 
 .plan-features li i.pi-times {
-  color: #dc2626;
+  color: var(--color-graphite, #5C645F);
 }
 
 /* Payment Information */
 .payment-note {
   text-align: center;
-  color: #16a34a;
+  color: var(--color-brand, #1B4B3A);
   font-weight: 600;
   font-style: italic;
   margin-bottom: 2rem;
-  background: rgba(22, 163, 74, 0.1);
+  background: var(--color-brand-soft, #E8F0EC);
   padding: 1.5rem;
   border-radius: 12px;
-  border: 2px solid rgba(22, 163, 74, 0.2);
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .payment-row {
@@ -748,18 +725,18 @@ const goToLogin = () => {
 }
 
 .payment-summary {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 16px;
+  background: var(--color-brand-soft, #E8F0EC);
+  border-radius: 12px;
   padding: 2rem;
   margin-top: 2rem;
-  border: 2px solid #e2e8f0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .payment-summary h3 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1e293b;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   margin-top: 0;
   margin-bottom: 1.5rem;
   text-align: center;
@@ -769,17 +746,21 @@ const goToLogin = () => {
   display: flex;
   justify-content: space-between;
   margin-bottom: 1rem;
-  color: #475569;
+  color: var(--color-graphite, #5C645F);
   font-weight: 500;
 }
 
 .summary-row.total {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 2px solid #e2e8f0;
+  border-top: 1px solid var(--color-border, #D8DFDA);
   font-weight: 700;
-  color: #1e293b;
+  color: var(--color-ink, #12211C);
   font-size: 1.25rem;
+}
+
+.summary-row.total span:last-child {
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
 }
 
 /* Messages */
@@ -813,46 +794,43 @@ const goToLogin = () => {
   align-items: center;
   margin-top: 2rem;
   padding: 2rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-top: 2px solid #e2e8f0;
+  background: var(--color-brand-soft, #E8F0EC);
+  border-top: 1px solid var(--color-border, #D8DFDA);
   gap: 1rem;
 }
 
 :deep(.p-button) {
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 1rem 2rem;
   font-weight: 700;
   font-size: 1rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  letter-spacing: 0.025em;
+  transition: background-color 0.2s ease;
 }
 
 :deep(.p-button-primary) {
-  background: linear-gradient(135deg, #1e4d2b 0%, #2d6b3f 100%);
-  border-color: transparent;
-  box-shadow: 0 4px 12px rgba(30, 77, 43, 0.3);
+  background: var(--color-brand, #1B4B3A);
+  border-color: var(--color-brand, #1B4B3A);
 }
 
 :deep(.p-button-primary:hover) {
-  background: linear-gradient(135deg, #2d6b3f 0%, #1e4d2b 100%);
-  border-color: transparent;
-  box-shadow: 0 8px 20px rgba(30, 77, 43, 0.4);
-  transform: translateY(-2px);
+  background: var(--color-brand-strong, #123329);
+  border-color: var(--color-brand-strong, #123329);
 }
 
 :deep(.p-button-outlined) {
-  color: #374151;
-  border-color: #d1d5db;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  color: var(--color-ink, #12211C);
+  border-color: var(--color-border, #D8DFDA);
+  background: var(--color-paper, #FCFCFA);
 }
 
 :deep(.p-button-outlined:hover) {
-  background-color: #f9fafb;
-  border-color: #9ca3af;
-  color: #1f2937;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--color-brand-soft, #E8F0EC);
+  border-color: var(--color-brand, #1B4B3A);
+}
+
+:deep(.p-button:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 :deep(.p-button .p-button-icon-left) {
@@ -875,23 +853,21 @@ const goToLogin = () => {
 }
 
 .login-prompt p {
-  color: #6b7280;
+  color: var(--color-graphite, #5C645F);
   margin: 0;
   font-weight: 500;
 }
 
 :deep(.login-link) {
-  color: #1e4d2b;
+  color: var(--color-brand, #1B4B3A);
   font-weight: 700;
   padding: 0.75rem 1.5rem;
-  border-radius: 12px;
-  transition: all 0.2s ease;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
 }
 
 :deep(.login-link:hover) {
-  background-color: rgba(30, 77, 43, 0.1);
-  color: #1e4d2b;
-  transform: translateY(-1px);
+  background-color: var(--color-brand-soft, #E8F0EC);
 }
 
 /* Responsive Design */
@@ -914,7 +890,7 @@ const goToLogin = () => {
     padding: 1.5rem;
   }
   
-  :deep(.custom-steps .p-steps-item .p-steps-number) {
+  :deep(.custom-steps .p-steps-item-number) {
     width: 2.5rem;
     height: 2.5rem;
     font-size: 1rem;
@@ -984,7 +960,7 @@ const goToLogin = () => {
     padding: 1.25rem;
   }
   
-  :deep(.custom-steps .p-steps-item .p-steps-title) {
+  :deep(.custom-steps .p-steps-item-label) {
     display: none;
   }
   

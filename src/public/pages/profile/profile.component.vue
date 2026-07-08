@@ -71,41 +71,34 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.profile-wrapper,
+.profile-wrapper * {
+  box-sizing: border-box;
+}
+
 .profile-wrapper {
   min-height: 60vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #f5f0e1 0%, #ede4d1 100%);
+  background: var(--color-brand-soft, #E8F0EC);
   padding: 2rem 1rem;
-  position: relative;
-}
-
-.profile-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23ffffff" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-  pointer-events: none;
+  font-family: var(--font-body, 'Inter', sans-serif);
 }
 
 :deep(.profile-card) {
   width: 100%;
   max-width: 500px;
-  border-radius: 1.25rem;
-  box-shadow: 0 15px 35px rgba(30, 77, 43, 0.15);
-  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(18, 33, 28, 0.12);
+  background: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
   overflow: hidden;
-  transition: all 0.3s ease;
 }
 
 :deep(.profile-card .p-card-header) {
-  background: linear-gradient(135deg, #1e4d2b 0%, #2d6b3f 100%);
+  background: var(--color-brand, #1B4B3A);
   padding: 1.5rem;
-  position: relative;
 }
 
 :deep(.profile-card .p-card-content) {
@@ -113,13 +106,13 @@ onMounted(async () => {
 }
 
 .profile-title {
-  color: white;
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  color: var(--color-paper, #FCFCFA);
+  font-size: 1.6rem;
+  font-weight: 600;
   margin: 0;
   text-align: center;
-  letter-spacing: -0.025em;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.01em;
 }
 
 .profile-data {
@@ -133,25 +126,19 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background-color: #f9fafb;
-  border-radius: 12px;
-  border-left: 4px solid #1e4d2b;
-  transition: all 0.3s ease;
-}
-
-.profile-row:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background-color: var(--color-brand-soft, #E8F0EC);
+  border-radius: 8px;
+  border-left: 4px solid var(--color-brand, #1B4B3A);
 }
 
 .profile-label {
   font-weight: 600;
-  color: #1e4d2b;
+  color: var(--color-brand, #1B4B3A);
   font-size: 1rem;
 }
 
 .profile-value {
-  color: #495057;
+  color: var(--color-ink, #12211C);
   font-weight: 500;
   word-break: break-all;
   max-width: 60%;
@@ -160,7 +147,7 @@ onMounted(async () => {
 
 .profile-loading {
   text-align: center;
-  color: #1e4d2b;
+  color: var(--color-brand, #1B4B3A);
   font-weight: 500;
   padding: 2rem;
   font-size: 1.1rem;
@@ -173,17 +160,20 @@ onMounted(async () => {
 }
 
 :deep(.home-btn) {
-  color: #1e4d2b;
+  color: var(--color-brand, #1B4B3A);
   font-weight: 600;
   font-size: 1rem;
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease;
   border-radius: 8px;
 }
 
 :deep(.home-btn:hover) {
-  background-color: rgba(30, 77, 43, 0.1);
-  color: #1e4d2b;
-  transform: translateY(-1px);
+  background-color: var(--color-brand-soft, #E8F0EC);
+}
+
+:deep(.home-btn:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 :deep(.home-btn .p-button-icon) {
@@ -239,7 +229,7 @@ onMounted(async () => {
   
   .profile-label {
     font-size: 0.9rem;
-    color: #64748b;
+    color: var(--color-brand, #1B4B3A);
   }
   
   :deep(.profile-card .p-card-header) {

@@ -212,23 +212,21 @@ onMounted(async () => {
 .search-page-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1.5rem 0.75rem;
-  font-family: var(--font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
+  padding: 2rem 0.75rem;
+  font-family: var(--font-body, 'Inter', sans-serif);
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
 .fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
+  animation: fadeIn 0.3s ease-out forwards;
 }
 
 .brand-phrase-container {
@@ -252,31 +250,18 @@ onMounted(async () => {
 }
 
 .search-container {
-  background: linear-gradient(to bottom, #ffffff, #f8fafc);
-  border-radius: 16px;
-  box-shadow: 
-    0 10px 25px rgba(0, 0, 0, 0.05),
-    0 5px 10px rgba(0, 0, 0, 0.03),
-    0 0 0 1px rgba(0, 0, 0, 0.03);
+  background: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
+  border-radius: 12px;
   overflow: hidden;
-  transition: all 0.3s ease;
   position: relative;
   opacity: 0;
-  transform: translateY(20px);
-}
-
-.search-container:hover {
-  box-shadow: 
-    0 15px 35px rgba(0, 0, 0, 0.07),
-    0 5px 15px rgba(0, 0, 0, 0.05),
-    0 0 0 1px rgba(0, 0, 0, 0.03);
-  transform: translateY(-2px);
 }
 
 .search-header {
-  background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+  background: var(--color-brand-soft, #E8F0EC);
   padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--color-border, #D8DFDA);
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -284,20 +269,21 @@ onMounted(async () => {
 
 .search-header i {
   font-size: 1.25rem;
-  color: #475569;
+  color: var(--color-brand, #1B4B3A);
 }
 
 .search-header h2 {
   margin: 0;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
   font-size: 1.25rem;
   font-weight: 600;
-  color: #334155;
+  color: var(--color-ink, #12211C);
   line-height: 1.2;
 }
 
 .filter-section {
   padding: 1.5rem;
-  background-color: white;
+  background-color: var(--color-paper, #FCFCFA);
 }
 
 .filter-row {
@@ -319,14 +305,14 @@ onMounted(async () => {
   align-items: center;
   gap: 0.5rem;
   font-weight: 500;
-  color: #475569;
+  color: var(--color-ink, #12211C);
   margin-bottom: 0.25rem;
   font-size: 0.95rem;
 }
 
 .filter-label i {
   font-size: 0.95rem;
-  color: #64748b;
+  color: var(--color-graphite, #5C645F);
 }
 
 .certificate-value, .brand-value, .model-value, .distance-value {
@@ -384,17 +370,15 @@ onMounted(async () => {
   font-size: 1rem;
   font-weight: 600;
   border-radius: 8px;
-  background: linear-gradient(to right, #3b82f6, #2563eb);
+  background: var(--color-brand, #1B4B3A);
   border: none;
   color: white;
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease;
   order: 1;
 }
 
 :deep(.search-button:hover) {
-  background: linear-gradient(to right, #2563eb, #1d4ed8);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  background: var(--color-brand-strong, #123329);
 }
 
 :deep(.clear-button) {
@@ -403,17 +387,16 @@ onMounted(async () => {
   font-size: 0.95rem;
   font-weight: 500;
   border-radius: 8px;
-  border: 2px solid #e2e8f0;
-  color: #64748b;
-  background: white;
-  transition: all 0.3s ease;
+  border: 2px solid var(--color-border, #D8DFDA);
+  color: var(--color-graphite, #5C645F);
+  background: var(--color-paper, #FCFCFA);
+  transition: border-color 0.2s ease, color 0.2s ease;
   order: 2;
 }
 
 :deep(.clear-button:hover) {
-  border-color: #cbd5e1;
-  color: #475569;
-  transform: translateY(-1px);
+  border-color: var(--color-graphite, #5C645F);
+  color: var(--color-ink, #12211C);
 }
 
 /* PrimeVue Select Styling  */
@@ -421,13 +404,14 @@ onMounted(async () => {
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 8px;
-  border: 2px solid #e2e8f0;
-  transition: all 0.3s ease;
+  border: 2px solid var(--color-border, #D8DFDA);
+  transition: border-color 0.2s ease;
   font-size: 0.95rem;
-  color: #334155;
-  background-color: white;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  color: var(--color-ink, #12211C);
+  background-color: var(--color-paper, #FCFCFA);
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235C645F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 1em;
@@ -435,23 +419,23 @@ onMounted(async () => {
 }
 
 .filter-select:hover {
-  border-color: #cbd5e1;
+  border-color: var(--color-graphite, #5C645F);
 }
 
-.filter-select:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+.filter-select:focus-visible {
+  border-color: var(--color-brand, #1B4B3A);
+  box-shadow: 0 0 0 3px var(--color-brand-soft, #E8F0EC);
   outline: none;
 }
 
 .filter-select option {
-  color: #334155;
-  background-color: white;
+  color: var(--color-ink, #12211C);
+  background-color: var(--color-paper, #FCFCFA);
   padding: 0.5rem;
 }
 
 .filter-select:disabled {
-  background-color: #f1f5f9;
+  background-color: var(--color-brand-soft, #E8F0EC);
   cursor: not-allowed;
   opacity: 0.7;
 }
@@ -567,10 +551,9 @@ onMounted(async () => {
 }
 
 /* Focus styles for keyboard navigation */
-.filter-select:focus-visible,
 :deep(.search-button:focus-visible),
 :deep(.clear-button:focus-visible) {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-brand, #1B4B3A);
   outline-offset: 2px;
 }
 
@@ -590,11 +573,12 @@ onMounted(async () => {
   .filter-select {
     border: 2px solid black;
   }
-  
+
   :deep(.search-button) {
     background: black;
     color: white;
   }
+
   
   :deep(.clear-button) {
     border: 2px solid black;

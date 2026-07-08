@@ -204,7 +204,10 @@ onMounted(async () => {
 
       <!-- Details Section -->
       <div class="details-section">
-        <h1 class="car-main-title">{{ car.title }}</h1>
+        <div class="car-title-row">
+          <h1 class="car-main-title">{{ car.title }}</h1>
+          <verified-seal v-if="car.hasPdfCertification" size="lg" />
+        </div>
         <div class="car-meta">
           <span><i class="pi pi-tag"></i> {{ t('carDetail.brand') }} {{ car.brand }}</span>
           <span><i class="pi pi-car"></i> {{ t('carDetail.model') }} {{ car.model }}</span>
@@ -216,7 +219,10 @@ onMounted(async () => {
         <div class="section-block">
           <h3 class="section-title"><i class="pi pi-user"></i> {{ t('carDetail.ownerInfo') }}</h3>
           <p><strong>{{ t('carDetail.owner') }}</strong> {{ car.owner }}</p>
-          <p><strong>{{ t('carDetail.licensePlate') }}</strong> {{ car.licensePlate }}</p>
+          <p class="plate-row">
+            <strong>{{ t('carDetail.licensePlate') }}</strong>
+            <span class="plate-document">{{ car.licensePlate }}</span>
+          </p>
         </div>
 
         <div class="section-block">
@@ -237,11 +243,11 @@ onMounted(async () => {
           <!-- PDF Loaded -->
           <div v-else-if="carPdf" class="pdf-content">
             <div class="pdf-actions">
-              <pv-button 
+              <pv-button
                 :label="t('carDetail.viewCert')"
                 icon="pi pi-eye"
                 @click="openReportInNewTab(carPdf)"
-                class="p-button-info p-mr-2" 
+                class="p-mr-2"
               />
               <pv-button 
                 :label="t('carDetail.downloadCert')"
@@ -288,7 +294,7 @@ onMounted(async () => {
               <pv-button
                 :label="t('carDetail.shareLink')"
                 icon="pi pi-copy"
-                class="p-button-outlined p-button-info"
+                class="p-button-outlined"
                 @click="copyShareLink"
               />
             </div>
@@ -324,9 +330,9 @@ onMounted(async () => {
   align-items: center;
   gap: 1rem;
   padding: 2rem;
-  background: #f8f9fa;
+  background: var(--color-brand-soft, #E8F0EC);
   border-radius: 8px;
-  border: 2px dashed #dee2e6;
+  border: 1px dashed var(--color-border, #D8DFDA);
   justify-content: center;
 }
 
@@ -336,34 +342,33 @@ onMounted(async () => {
   align-items: center;
   gap: 1rem;
   padding: 2rem;
-  background: #fff5f5;
+  background: #fdf2f2;
   border-radius: 8px;
-  border: 2px dashed #fecaca;
-  color: #dc2626;
+  border: 1px dashed #f0caca;
+  color: #a02525;
 }
 
 .car-detail-container {
   max-width: 1400px;
   margin: 2rem auto;
   padding: 2rem;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
+  border-radius: 12px;
+  font-family: var(--font-body, 'Inter', sans-serif);
 }
 
 .back-button {
   margin-bottom: 2rem;
-  color: #007bff !important;
+  color: var(--color-brand, #1B4B3A) !important;
   font-weight: 600 !important;
   padding: 0.75rem 1.5rem !important;
-  border-radius: 25px !important;
-  transition: all 0.3s ease !important;
+  border-radius: 8px !important;
+  transition: background-color 0.2s ease !important;
 }
 
 .back-button:hover {
-  background: rgba(0, 123, 255, 0.1) !important;
-  transform: translateX(-2px) !important;
+  background: var(--color-brand-soft, #E8F0EC) !important;
 }
 
 .loading-spinner,
@@ -375,7 +380,7 @@ onMounted(async () => {
   justify-content: center;
   min-height: 400px;
   text-align: center;
-  color: #555;
+  color: var(--color-graphite, #5C645F);
   padding: 2rem;
 }
 
@@ -385,18 +390,19 @@ onMounted(async () => {
   font-weight: 500;
 }
 
-.error-message i, 
+.error-message i {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  color: #b83232;
+}
+
 .no-car-found i {
   font-size: 4rem;
   margin-bottom: 1.5rem;
-  color: #dc3545;
+  color: var(--color-graphite, #5C645F);
 }
 
-.no-car-found i {
-  color: #6c757d;
-}
-
-.error-message p, 
+.error-message p,
 .no-car-found p {
   font-size: 1.3rem;
   margin-bottom: 1.5rem;
@@ -423,30 +429,28 @@ onMounted(async () => {
   min-height: 300px;
   max-height: 500px;
   object-fit: cover;
-  border-radius: 16px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  border: 1px solid var(--color-border, #D8DFDA);
   margin-bottom: 1.5rem;
-  transition: transform 0.3s ease;
-}
-
-.main-car-image:hover {
-  transform: scale(1.02);
 }
 
 .details-section {
   padding: 0;
 }
 
-.car-main-title {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: #2c3e50;
+.car-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   margin-bottom: 1rem;
+}
+
+.car-main-title {
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 2.25rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   line-height: 1.2;
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .car-meta {
@@ -454,12 +458,11 @@ onMounted(async () => {
   flex-wrap: wrap;
   gap: 1.5rem;
   font-size: 1rem;
-  color: #555;
+  color: var(--color-graphite, #5C645F);
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: rgba(0, 123, 255, 0.05);
+  background: var(--color-brand-soft, #E8F0EC);
   border-radius: 12px;
-  border-left: 4px solid #007bff;
 }
 
 .car-meta span {
@@ -467,65 +470,81 @@ onMounted(async () => {
   align-items: center;
   font-weight: 500;
   padding: 0.5rem 1rem;
-  background: white;
+  background: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
   border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .car-meta i {
   margin-right: 0.75rem;
-  color: #007bff;
+  color: var(--color-brand, #1B4B3A);
   font-size: 1.1rem;
 }
 
 .price-tag {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: #28a745;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-ink, #12211C);
   margin-bottom: 2rem;
   padding: 1.25rem 2rem;
-  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  background: var(--color-brand-soft, #E8F0EC);
   border-radius: 12px;
   display: inline-block;
-  border: 2px solid rgba(40, 167, 69, 0.2);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+  border: 1px solid var(--color-border, #D8DFDA);
+}
+
+.plate-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.plate-document {
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: var(--color-ink, #12211C);
+  background: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
 }
 
 .section-block {
   margin-bottom: 2.5rem;
   padding: 2rem;
-  background: white;
+  background: var(--color-paper, #FCFCFA);
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .section-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #34495e;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   margin-bottom: 1.25rem;
   padding-bottom: 0.75rem;
-  border-bottom: 3px solid #007bff;
+  border-bottom: 2px solid var(--color-brand, #1B4B3A);
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
 .section-title i {
-  color: #007bff;
-  font-size: 1.3rem;
+  color: var(--color-brand, #1B4B3A);
+  font-size: 1.2rem;
 }
 
 .car-full-description {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   line-height: 1.8;
-  color: #444;
+  color: var(--color-graphite, #5C645F);
   white-space: pre-wrap;
-  background: rgba(0, 0, 0, 0.02);
+  background: var(--color-brand-soft, #E8F0EC);
   padding: 1.5rem;
   border-radius: 8px;
-  border-left: 4px solid #007bff;
 }
 
 .technical-report-section .pdf-actions {
@@ -542,13 +561,12 @@ onMounted(async () => {
 }
 
 .pdf-preview-container {
-  border: 2px solid #e9ecef;
+  border: 1px solid var(--color-border, #D8DFDA);
   border-radius: 12px;
   overflow: hidden;
   height: 600px;
   margin-top: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background: #f8f9fa;
+  background: var(--color-brand-soft, #E8F0EC);
   position: relative;
 }
 
@@ -562,7 +580,7 @@ onMounted(async () => {
 .actions-footer {
   margin-top: 3rem;
   padding: 2rem;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: var(--color-brand-soft, #E8F0EC);
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -573,14 +591,7 @@ onMounted(async () => {
   padding: 1rem 2.5rem !important;
   font-size: 1.1rem !important;
   font-weight: 600 !important;
-  border-radius: 25px !important;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3) !important;
-  transition: all 0.3s ease !important;
-}
-
-.actions-footer :deep(.p-button:hover) {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4) !important;
+  border-radius: 8px !important;
 }
 
 /* Responsive Design */
@@ -687,7 +698,7 @@ onMounted(async () => {
   
   .pdf-preview-container {
     height: 400px;
-    background: #f8f9fa;
+    background: var(--color-brand-soft, #E8F0EC);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -695,20 +706,20 @@ onMounted(async () => {
     text-align: center;
     padding: 1rem;
   }
-  
+
   .pdf-iframe {
     display: none;
   }
-  
+
   .pdf-preview-container::after {
     content: "Para una mejor experiencia, utiliza los botones de arriba para ver o descargar el certificado PDF";
-    color: #6c757d;
+    color: var(--color-graphite, #5C645F);
     font-size: 0.9rem;
     line-height: 1.5;
-    background: white;
+    background: var(--color-paper, #FCFCFA);
     padding: 1.5rem;
     border-radius: 8px;
-    border: 2px dashed #dee2e6;
+    border: 1px dashed var(--color-border, #D8DFDA);
     max-width: 100%;
   }
   
@@ -840,9 +851,19 @@ onMounted(async () => {
 .share-url-input {
   flex: 1;
   min-width: 200px;
-  font-size: 0.85rem;
-  color: #555;
-  background: #f8f8f8;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 0.8rem;
+  color: var(--color-graphite, #5C645F);
+  background: var(--color-brand-soft, #E8F0EC);
+}
+
+/* Focus styles for keyboard navigation */
+:deep(.back-button:focus-visible),
+:deep(.pdf-actions .p-button:focus-visible),
+:deep(.actions-footer .p-button:focus-visible),
+:deep(.share-actions .p-button:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 .copy-feedback {

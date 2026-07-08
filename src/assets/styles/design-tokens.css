@@ -1,0 +1,24 @@
+/*
+  CertiWeb design tokens — "Sello técnico verificable"
+  Certificación vehicular tratada como documentación técnica real.
+  Fase 1: toolbar, dashboard, CarList, CarDetail.
+*/
+:root {
+  /* Color */
+  --color-ink: #12211C;
+  --color-paper: #FCFCFA;
+  --color-brand: #1B4B3A;
+  --color-brand-soft: #E8F0EC;
+  --color-verified: #B08D3E;
+  --color-graphite: #5C645F;
+
+  /* Derived surfaces / states (kept close to the base palette) */
+  --color-brand-strong: #123329;
+  --color-border: #D8DFDA;
+  --color-verified-soft: #F5EDDC;
+
+  /* Typography */
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}

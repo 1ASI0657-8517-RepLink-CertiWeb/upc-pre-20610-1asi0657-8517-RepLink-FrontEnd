@@ -19,6 +19,8 @@ const fetchCertifiedCars = async () => {
       name: `${car.brand} ${car.model}`,
       image: car.imageUrl,
       price: car.price,
+      licensePlate: car.licensePlate,
+      hasPdfCertification: car.hasPdfCertification,
       route: `/car-detail/${car.id}`
     }));
   } catch (err) {
@@ -154,11 +156,16 @@ onMounted(async () => {
               :key="car.id"
               class="carousel-item"
               :style="{ width: `calc(${100 / visibleItems}% - 1rem)` }"
+              tabindex="0"
+              role="link"
+              :aria-label="car.name"
               @click="navigateToCar(car.route)"
+              @keydown.enter="navigateToCar(car.route)"
             >
               <div class="car-card">
                 <div class="car-image-container">
                   <img :src="car.image" :alt="car.name" class="car-image" />
+                  <verified-seal v-if="car.hasPdfCertification" class="car-seal" size="sm" />
                   <div class="car-overlay">
                     <span class="car-price">{{ formatCurrency(car.price) }}</span>
                     <span class="car-view-details">
@@ -168,6 +175,7 @@ onMounted(async () => {
                 </div>
                 <div class="car-info">
                   <h3 class="car-name">{{ car.name }}</h3>
+                  <span v-if="car.licensePlate" class="car-plate">{{ car.licensePlate }}</span>
                 </div>
               </div>
             </div>
@@ -195,8 +203,8 @@ onMounted(async () => {
 
 <style scoped>
 .certified-cars-section {
-  padding: 2rem 0.75rem;
-  background-color: #f5f0e1;
+  padding: 2.5rem 0.75rem;
+  background-color: var(--color-paper, #FCFCFA);
 }
 
 .certified-cars-container {
@@ -212,16 +220,17 @@ onMounted(async () => {
 }
 
 .welcome-title {
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
   font-size: 1.5rem;
-  font-weight: 700;
-  color: #1b4332;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   margin-bottom: 0.5rem;
   line-height: 1.2;
 }
 
 .welcome-subtitle {
   font-size: 0.95rem;
-  color: #495057;
+  color: var(--color-graphite, #5C645F);
   line-height: 1.5;
 }
 
@@ -239,7 +248,7 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   padding: 3rem 1rem;
-  color: #495057;
+  color: var(--color-graphite, #5C645F);
   font-size: 1rem;
 }
 
@@ -258,26 +267,21 @@ onMounted(async () => {
   flex-shrink: 0;
   padding: 0 0.5rem;
   cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.carousel-item:hover {
-  transform: translateY(-5px);
 }
 
 .car-card {
-  background-color: white;
+  background-color: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
 .car-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: var(--color-brand, #1B4B3A);
 }
 
 .car-image-container {
@@ -288,6 +292,13 @@ onMounted(async () => {
   flex-shrink: 0;
 }
 
+.car-seal {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+}
+
 .car-image {
   position: absolute;
   top: 0;
@@ -295,11 +306,6 @@ onMounted(async () => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.car-card:hover .car-image {
-  transform: scale(1.05);
 }
 
 .car-overlay {
@@ -346,15 +352,22 @@ onMounted(async () => {
 .car-name {
   font-size: 1rem;
   font-weight: 600;
-  color: #212529;
-  margin: 0 0 0.25rem;
+  color: var(--color-ink, #12211C);
+  margin: 0 0 0.35rem;
   line-height: 1.3;
 }
 
-.car-color {
-  font-size: 0.85rem;
-  color: #6c757d;
-  margin: 0;
+.car-plate {
+  display: inline-block;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  font-size: 0.8rem;
+  color: var(--color-graphite, #5C645F);
+  background: var(--color-brand-soft, #E8F0EC);
+  border: 1px solid var(--color-border, #D8DFDA);
+  border-radius: 4px;
+  padding: 0.15rem 0.45rem;
+  letter-spacing: 0.03em;
+  width: fit-content;
 }
 
 .carousel-arrow {
@@ -364,21 +377,19 @@ onMounted(async () => {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-  background-color: white;
-  border: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
   cursor: pointer;
   z-index: 10;
-  transition: all 0.2s ease;
-  color: #212529;
+  transition: background-color 0.2s ease;
+  color: var(--color-ink, #12211C);
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
 }
 
 .carousel-arrow:hover {
-  background-color: #f8f9fa;
-  transform: translateY(-50%) scale(1.05);
+  background-color: var(--color-brand-soft, #E8F0EC);
 }
 
 .carousel-arrow:active {
@@ -412,26 +423,17 @@ onMounted(async () => {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: #1b4332;
+  color: var(--color-brand, #1B4B3A);
   font-weight: 600;
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
   font-size: 0.95rem;
 }
 
 .see-more-link:hover {
-  background-color: rgba(27, 67, 50, 0.1);
-  transform: translateX(5px);
-}
-
-.see-more-link i {
-  transition: transform 0.2s ease;
-}
-
-.see-more-link:hover i {
-  transform: translateX(3px);
+  background-color: var(--color-brand-soft, #E8F0EC);
 }
 
 /* Responsive adjustments */
@@ -591,10 +593,10 @@ onMounted(async () => {
 }
 
 /* Focus styles for keyboard navigation */
+.carousel-item:focus-visible,
 .carousel-arrow:focus-visible,
-.see-more-link:focus-visible,
-.carousel-item:focus-visible {
-  outline: 2px solid #1b4332;
+.see-more-link:focus-visible {
+  outline: 2px solid var(--color-brand, #1B4B3A);
   outline-offset: 2px;
 }
 </style>

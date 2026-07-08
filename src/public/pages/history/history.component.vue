@@ -57,7 +57,7 @@ onMounted(async () => {
       </div>
       
       <div v-else-if="errorLoading" class="error-state">
-        <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: red;"></i>
+        <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: #a02525;"></i>
         <p>{{ errorLoading }}</p>
       </div>
 
@@ -70,7 +70,7 @@ onMounted(async () => {
       </div>
 
       <div v-else class="empty-state">
-        <i class="pi pi-inbox" style="font-size: 2rem; color: #666;"></i>
+        <i class="pi pi-inbox" style="font-size: 2rem; color: var(--color-brand, #1B4B3A);"></i>
         <p>{{ t('historyPage.emptyTitle') }}</p>
         <pv-button 
           :label="t('historyPage.exploreButton')" 
@@ -85,12 +85,17 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.history-page,
+.history-page * {
+  box-sizing: border-box;
+}
+
 .history-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: var(--color-paper, #FCFCFA);
+  font-family: var(--font-body, 'Inter', sans-serif);
 }
 
 .history-container {
@@ -102,17 +107,14 @@ onMounted(async () => {
 }
 
 .page-title {
-  font-size: 2.75rem;
-  font-weight: 800;
-  color: #1e4d2b;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  font-size: 2.25rem;
+  font-weight: 600;
+  color: var(--color-ink, #12211C);
   margin-bottom: 3rem;
   text-align: center;
-  background: linear-gradient(135deg, #1e4d2b 0%, #2d6b3f 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   position: relative;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
 }
 
 .page-title::after {
@@ -121,9 +123,9 @@ onMounted(async () => {
   bottom: -15px;
   left: 50%;
   transform: translateX(-50%);
-  width: 120px;
-  height: 4px;
-  background: linear-gradient(90deg, #1e4d2b, #2d6b3f);
+  width: 80px;
+  height: 3px;
+  background: var(--color-brand, #1B4B3A);
   border-radius: 2px;
 }
 
@@ -143,26 +145,21 @@ onMounted(async () => {
   justify-content: center;
   padding: 4rem 2rem;
   text-align: center;
-  color: #6c757d;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  color: var(--color-graphite, #5C645F);
+  background: var(--color-paper, #FCFCFA);
+  border-radius: 12px;
   margin: 2rem 0;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.loading-state {
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .error-state {
-  background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
-  border-color: rgba(220, 53, 69, 0.2);
+  background: #fdf2f2;
+  border-color: #f0caca;
 }
 
 .empty-state {
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  border-color: rgba(59, 130, 246, 0.2);
+  background: var(--color-brand-soft, #E8F0EC);
+  border-color: var(--color-border, #D8DFDA);
 }
 
 .loading-state p,
@@ -183,29 +180,30 @@ onMounted(async () => {
 }
 
 .error-state i {
-  color: #dc3545 !important;
+  color: #a02525 !important;
 }
 
 .empty-state i {
-  color: #3b82f6 !important;
+  color: var(--color-brand, #1B4B3A) !important;
 }
 
 .empty-state :deep(.p-button-outlined) {
   margin-top: 2rem;
-  color: #1e4d2b;
-  border-color: #1e4d2b;
+  color: var(--color-brand, #1B4B3A);
+  border-color: var(--color-brand, #1B4B3A);
   padding: 0.875rem 2rem;
   font-weight: 600;
-  border-radius: 25px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(30, 77, 43, 0.2);
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
 }
 
 .empty-state :deep(.p-button-outlined:hover) {
-  background: rgba(30, 77, 43, 0.1);
-  border-color: #2d6b3f;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(30, 77, 43, 0.3);
+  background: rgba(27, 75, 58, 0.1);
+}
+
+.empty-state :deep(.p-button-outlined:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 /* Responsive Design */

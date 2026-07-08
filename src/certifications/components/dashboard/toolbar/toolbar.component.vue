@@ -252,10 +252,9 @@ const navigateToHome = () => {
 
 /* Main Toolbar */
 .main-toolbar {
-  background: linear-gradient(135deg, #1e4d2b 0%, #2d5a3d 100%);
-  backdrop-filter: blur(10px);
+  background: var(--color-brand, #1B4B3A);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
   padding: 0.75rem 1.5rem;
   display: flex;
   align-items: center;
@@ -277,11 +276,6 @@ const navigateToHome = () => {
   align-items: center;
   gap: 0.75rem;
   cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.logo-section:hover {
-  transform: scale(1.05);
 }
 
 .logo {
@@ -300,10 +294,11 @@ const navigateToHome = () => {
 }
 
 .brand-name {
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600;
   color: white;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px;
 }
 
 .desktop-nav {
@@ -326,8 +321,6 @@ const navigateToHome = () => {
 :deep(.nav-button:hover) {
   background: rgba(255, 255, 255, 0.2) !important;
   border-color: rgba(255, 255, 255, 0.4) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
 }
 
 :deep(.nav-button .p-button-icon) {
@@ -351,17 +344,15 @@ const navigateToHome = () => {
   align-items: center;
   gap: 0.75rem;
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
   padding: 0.5rem 1rem;
   border-radius: 50px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .user-profile:hover {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.4);
-  transform: translateY(-1px);
 }
 
 .user-avatar {
@@ -401,8 +392,7 @@ const navigateToHome = () => {
   height: 48px;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -411,12 +401,10 @@ const navigateToHome = () => {
 .menu-button:hover {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.4);
-  transform: translateY(-1px);
 }
 
 .menu-button i {
   font-size: 1.2rem;
-  transition: transform 0.2s ease;
 }
 
 /* Universal Side Menu */
@@ -445,7 +433,7 @@ const navigateToHome = () => {
   align-items: center;
   justify-content: space-between;
   padding: 1.5rem;
-  background: linear-gradient(135deg, #1e4d2b 0%, #2d5a3d 100%);
+  background: var(--color-brand, #1B4B3A);
   color: white;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   flex-shrink: 0;
@@ -510,7 +498,6 @@ const navigateToHome = () => {
 
 .close-btn:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: rotate(90deg);
 }
 
 .close-btn i {
@@ -549,25 +536,24 @@ const navigateToHome = () => {
   gap: 1rem;
   padding: 1rem 1.5rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-left-color 0.2s ease;
   border-left: 4px solid transparent;
 }
 
 .menu-item:hover {
-  background: #f8f9fa;
-  border-left-color: #1e4d2b;
-  transform: translateX(2px);
+  background: var(--color-brand-soft, #f8f9fa);
+  border-left-color: var(--color-brand, #1e4d2b);
 }
 
 .menu-item-icon {
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: #f0f7f2;
+  background: var(--color-brand-soft, #f0f7f2);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #1e4d2b;
+  color: var(--color-brand, #1e4d2b);
   font-size: 1.1rem;
   flex-shrink: 0;
 }
@@ -752,20 +738,21 @@ const navigateToHome = () => {
   -webkit-tap-highlight-color: transparent;
 }
 
-.main-toolbar,
-.side-menu,
-.menu-item,
-.close-btn,
-.menu-button {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.side-menu {
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.logo-section:focus,
-.menu-item:focus,
-.close-btn:focus,
-.menu-button:focus {
-  outline: 2px solid rgba(30, 77, 43, 0.5);
+.logo-section:focus-visible,
+.close-btn:focus-visible,
+.menu-button:focus-visible,
+:deep(.nav-button:focus-visible) {
+  outline: 2px solid var(--color-brand-soft, #E8F0EC);
   outline-offset: 2px;
+}
+
+.menu-item:focus-visible {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: -2px;
 }
 
 body.menu-open {

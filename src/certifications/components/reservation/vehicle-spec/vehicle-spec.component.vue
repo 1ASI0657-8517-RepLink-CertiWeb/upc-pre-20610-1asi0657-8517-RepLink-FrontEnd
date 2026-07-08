@@ -224,7 +224,7 @@ const validarPlaca = (placa) => {
             :placeholder="t('vehicleSpec.platePlaceholder')"
             @input="formatearPlaca"
             maxlength="7"
-            class="p-input-custom"
+            class="p-input-custom plate-input"
             :class="{ 'p-invalid': !placaValida && formulario.placa.length > 0 }"
           />
           <small class="field-help">{{ t('vehicleSpec.plateFormat') }}</small>
@@ -265,15 +265,20 @@ const validarPlaca = (placa) => {
 </template>
 
 <style scoped>
+.vehicle-spec-container,
+.vehicle-spec-container * {
+  box-sizing: border-box;
+}
+
 .vehicle-spec-container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  background: linear-gradient(135deg, #f8fffe 0%, #f0f9f4 100%);
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
+  border-radius: 12px;
+  font-family: var(--font-body, 'Inter', sans-serif);
 }
 
 .seccion {
@@ -281,25 +286,14 @@ const validarPlaca = (placa) => {
 }
 
 .subtitulo-formulario {
-  color: #1e4d2b;
-  font-size: 1.75rem;
+  font-family: var(--font-display, 'Space Grotesk', sans-serif);
+  color: var(--color-ink, #12211C);
+  font-size: 1.6rem;
   margin-bottom: 1.5rem;
-  font-weight: 700;
-  position: relative;
+  font-weight: 600;
   padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--color-brand, #1B4B3A);
   text-align: center;
-}
-
-.subtitulo-formulario::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 3px;
-  background: linear-gradient(90deg, #1e4d2b, #2d6b3f);
-  border-radius: 2px;
 }
 
 .fotos-container {
@@ -313,35 +307,31 @@ const validarPlaca = (placa) => {
   max-width: 500px;
   display: flex;
   flex-direction: column;
-  border: 2px dashed #e0e0e0;
-  border-radius: 16px;
-  background: white;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  border: 2px dashed var(--color-border, #D8DFDA);
+  border-radius: 12px;
+  background: var(--color-paper, #FCFCFA);
+  transition: border-color 0.2s ease;
   overflow: hidden;
   min-height: 300px;
 }
 
 .foto-upload:hover {
-  border-color: #1e4d2b;
-  box-shadow: 0 4px 20px rgba(30, 77, 43, 0.15);
-  transform: translateY(-2px);
+  border-color: var(--color-brand, #1B4B3A);
 }
 
 .foto-uploaded {
   border-style: solid;
-  border-color: #1e4d2b;
-  background: linear-gradient(135deg, #f0f9f4 0%, #e6f7e6 100%);
+  border-color: var(--color-brand, #1B4B3A);
+  background: var(--color-brand-soft, #E8F0EC);
 }
 
 .upload-header {
-  background: linear-gradient(135deg, #1e4d2b 0%, #2d6b3f 100%);
-  color: white;
+  background: var(--color-brand, #1B4B3A);
+  color: var(--color-paper, #FCFCFA);
   font-weight: 600;
   padding: 1rem;
   text-align: center;
   font-size: 1rem;
-  letter-spacing: 0.5px;
 }
 
 .upload-content {
@@ -354,13 +344,12 @@ const validarPlaca = (placa) => {
 }
 
 .upload-hint {
-  padding: 0 1.5rem 1rem;
-  color: #666;
+  color: var(--color-graphite, #5C645F);
   font-size: 0.875rem;
   text-align: center;
   font-style: italic;
-  background: rgba(30, 77, 43, 0.05);
-  margin: 0 1rem;
+  background: var(--color-brand-soft, #E8F0EC);
+  margin: 0 1rem 1rem;
   border-radius: 8px;
   padding: 0.75rem;
 }
@@ -371,11 +360,10 @@ const validarPlaca = (placa) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: white;
-  border-radius: 12px;
+  background: var(--color-paper, #FCFCFA);
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(30, 77, 43, 0.2);
+  border: 1px solid var(--color-border, #D8DFDA);
 }
 
 .imagen-preview-failed {
@@ -385,13 +373,13 @@ const validarPlaca = (placa) => {
   flex-direction: column;
   align-items: center;
   padding: 1rem;
-  background: #fff5f5;
-  border: 2px solid #fed7d7;
-  border-radius: 12px;
+  background: #fdf2f2;
+  border: 1px solid #f0caca;
+  border-radius: 8px;
 }
 
 .imagen-preview-failed .nombre-archivo {
-  color: #e53e3e;
+  color: #a02525;
   font-weight: 500;
 }
 
@@ -403,7 +391,7 @@ const validarPlaca = (placa) => {
 
 .nombre-archivo {
   font-size: 0.875rem;
-  color: #666;
+  color: var(--color-graphite, #5C645F);
   margin: 0.75rem;
   max-width: 100%;
   overflow: hidden;
@@ -428,23 +416,21 @@ const validarPlaca = (placa) => {
 }
 
 :deep(.p-button) {
-  background: linear-gradient(135deg, #1e4d2b 0%, #2d6b3f 100%);
+  background: var(--color-brand, #1B4B3A);
   border: none;
-  border-radius: 10px !important;
+  border-radius: 8px !important;
   padding: 0.875rem 2rem;
   font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(30, 77, 43, 0.2);
+  transition: background-color 0.2s ease;
 }
 
 :deep(.p-button:hover) {
-  background: linear-gradient(135deg, #2d6b3f 0%, #1e4d2b 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(30, 77, 43, 0.3);
+  background: var(--color-brand-strong, #123329);
 }
 
-:deep(.p-button:focus) {
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px rgba(30, 77, 43, 0.4);
+:deep(.p-button:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 :deep(.p-fileupload-choose) {
@@ -453,33 +439,38 @@ const validarPlaca = (placa) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px dashed #1e4d2b !important;
-  border-radius: 10px !important;
-  background: rgba(30, 77, 43, 0.05) !important;
-  color: #1e4d2b !important;
+  border: 2px dashed var(--color-brand, #1B4B3A) !important;
+  border-radius: 8px !important;
+  background: var(--color-brand-soft, #E8F0EC) !important;
+  color: var(--color-brand, #1B4B3A) !important;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: background-color 0.2s ease;
 }
 
 :deep(.p-fileupload-choose:hover) {
-  background: rgba(30, 77, 43, 0.1) !important;
+  background: var(--color-border, #D8DFDA) !important;
   border-style: solid !important;
 }
 
+:deep(.p-fileupload-choose:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
+}
+
 :deep(.p-button.p-component.p-button-secondary) {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
-  border: 2px solid #1e4d2b !important;
-  color: #1e4d2b !important;
+  background: var(--color-paper, #FCFCFA) !important;
+  border: 2px solid var(--color-brand, #1B4B3A) !important;
+  color: var(--color-brand, #1B4B3A) !important;
 }
 
 :deep(.p-button.p-component.p-button-secondary:hover) {
-  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%) !important;
+  background: var(--color-brand-soft, #E8F0EC) !important;
 }
 
 :deep(.imagen-cargada .p-fileupload-choose) {
-  background: rgba(30, 77, 43, 0.15) !important;
-  border: 2px solid #1e4d2b !important;
-  color: #1e4d2b !important;
+  background: var(--color-brand-soft, #E8F0EC) !important;
+  border: 2px solid var(--color-brand, #1B4B3A) !important;
+  color: var(--color-brand, #1B4B3A) !important;
 }
 
 .datos-vehiculo {
@@ -498,7 +489,7 @@ const validarPlaca = (placa) => {
 .campo-formulario label {
   margin-bottom: 0.75rem;
   font-weight: 600;
-  color: #1e4d2b;
+  color: var(--color-ink, #12211C);
   font-size: 1rem;
   display: flex;
   align-items: center;
@@ -509,25 +500,25 @@ const validarPlaca = (placa) => {
   content: '';
   width: 4px;
   height: 16px;
-  background: linear-gradient(180deg, #1e4d2b, #2d6b3f);
+  background: var(--color-brand, #1B4B3A);
   border-radius: 2px;
 }
 
 .campo-formulario small {
   margin-top: 0.5rem;
-  color: #666;
+  color: var(--color-graphite, #5C645F);
   font-size: 0.875rem;
 }
 
 .campo-formulario small.p-error {
-  color: #e53e3e;
+  color: #a02525;
   font-size: 0.875rem;
   margin-top: 0.25rem;
   font-weight: 500;
 }
 
 .field-help {
-  color: #666;
+  color: var(--color-graphite, #5C645F);
   font-size: 0.875rem;
   margin-top: 0.5rem;
   font-style: italic;
@@ -542,26 +533,29 @@ const validarPlaca = (placa) => {
   -webkit-appearance: none;
   -moz-appearance: none;
   width: 100%;
-  background: white;
-  border: 2px solid #e9ecef;
-  border-radius: 10px;
+  background: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
+  border-radius: 8px;
   padding: 0.875rem 1rem;
   font-size: 1rem;
-  color: #333;
+  color: var(--color-ink, #12211C);
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s ease;
 }
 
 .custom-select:hover {
-  border-color: #1e4d2b;
-  box-shadow: 0 2px 8px rgba(30, 77, 43, 0.1);
+  border-color: var(--color-brand, #1B4B3A);
 }
 
 .custom-select:focus {
   outline: none;
-  border-color: #1e4d2b;
-  box-shadow: 0 0 0 3px rgba(30, 77, 43, 0.1);
+  border-color: var(--color-brand, #1B4B3A);
+  box-shadow: 0 0 0 3px var(--color-brand-soft, #E8F0EC);
+}
+
+.custom-select:focus-visible {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 .select-arrow {
@@ -570,53 +564,58 @@ const validarPlaca = (placa) => {
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: #666;
-  transition: transform 0.2s ease;
+  color: var(--color-graphite, #5C645F);
 }
 
 .select-arrow i {
   font-size: 1rem;
 }
 
-.custom-select:focus + .select-arrow {
-  transform: translateY(-50%) rotate(180deg);
-}
-
 .custom-select option {
   padding: 0.75rem;
-  background: white;
-  color: #333;
+  background: var(--color-paper, #FCFCFA);
+  color: var(--color-ink, #12211C);
 }
 
 :deep(.p-input-custom),
 :deep(.p-inputtext) {
   width: 100%;
-  background: white;
-  border: 2px solid #e9ecef;
-  border-radius: 10px;
+  background: var(--color-paper, #FCFCFA);
+  border: 1px solid var(--color-border, #D8DFDA);
+  border-radius: 8px;
   padding: 0.875rem 1rem;
   font-size: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s ease;
 }
 
 :deep(.p-input-custom:hover),
 :deep(.p-inputtext:hover) {
-  border-color: #1e4d2b;
-  box-shadow: 0 2px 8px rgba(30, 77, 43, 0.1);
+  border-color: var(--color-brand, #1B4B3A);
 }
 
 :deep(.p-input-custom:focus),
 :deep(.p-inputtext:focus) {
   outline: 0 none;
-  border-color: #1e4d2b;
-  box-shadow: 0 0 0 3px rgba(30, 77, 43, 0.1);
+  border-color: var(--color-brand, #1B4B3A);
+  box-shadow: 0 0 0 3px var(--color-brand-soft, #E8F0EC);
+}
+
+:deep(.p-input-custom:focus-visible),
+:deep(.p-inputtext:focus-visible) {
+  outline: 2px solid var(--color-brand, #1B4B3A);
+  outline-offset: 2px;
 }
 
 :deep(.p-input-custom.p-invalid),
 :deep(.p-inputtext.p-invalid) {
-  border-color: #e53e3e !important;
-  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1) !important;
+  border-color: #a02525 !important;
+  box-shadow: 0 0 0 3px rgba(160, 37, 37, 0.1) !important;
+}
+
+/* Placa: dato técnico, mismo tratamiento que en CarDetail */
+:deep(.plate-input.p-inputtext) {
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
+  letter-spacing: 0.06em;
 }
 
 /* Responsive Design */
